@@ -1,10 +1,12 @@
 ﻿namespace VSOmniBox
 {
     using System;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
-    using Microsoft.VisualStudio.Shell;
     using VSOmniBox.Commands;
+    using Microsoft.VisualStudio.ComponentModelHost;
+    using Microsoft.VisualStudio.Shell;
 
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -30,6 +32,8 @@
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class VSPackage : Package
     {
+        private static IComponentModel componentModel;
+
         /// <summary>
         /// InvokeSearchCommandPackage GUID string.
         /// </summary>
@@ -44,6 +48,23 @@
             // any Visual Studio service because at this point the package object is created but
             // not sited yet inside Visual Studio environment. The place to do all the other
             // initialization is the Initialize method.
+        }
+
+        internal static IComponentModel ComponentModel
+            => componentModel ?? (componentModel = Package.GetGlobalService(typeof(SComponentModel)) as IComponentModel);
+
+        internal static TService GetMefService<TService>() where TService : class
+        {
+            var mefService = ThreadHelper.JoinableTaskFactory.Run(async delegate
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                return (TService)ComponentModel?.GetService<TService>();
+            });
+
+            Debug.Assert(mefService != null);
+
+            return mefService;
         }
 
         #region Package Members
