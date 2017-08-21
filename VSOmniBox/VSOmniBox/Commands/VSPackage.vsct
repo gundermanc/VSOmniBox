@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h"/>
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h"/>
+
+  <Commands package="guidInvokeSearchCommandPackage">
+
+    <!-- In this section you can define new menu groups. A menu group is a container for
+         other menus or buttons (commands); from a visual point of view you can see the
+         group as the part of a menu contained between two lines. The parent of a group
+         must be a menu. -->
+    <Groups>
+      <Group guid="guidPackageCommandSet" id="OmniBoxSearchGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      </Group>
+    </Groups>
+
+    <!--Buttons section. -->
+    <!--This section defines the elements the user can interact with, like a menu command or a button
+        or combo box in a toolbar. -->
+    <Buttons>
+      <!--To define a menu group you have to specify its ID, the parent menu and its display priority.
+          The command is visible and enabled by default. If you need to change the visibility, status, etc, you can use
+          the CommandFlag node.
+          You can add more than one CommandFlag node e.g.:
+              <CommandFlag>DefaultInvisible</CommandFlag>
+              <CommandFlag>DynamicVisibility</CommandFlag>
+          If you do not want an image next to your command, remove the Icon node /> -->
+      <Button guid="guidPackageCommandSet" id="InvokeSearchCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidPackageCommandSet" id="OmniBoxSearchGroup" />
+        <Strings>
+          <ButtonText>Omni Search...</ButtonText>
+          <MenuText>Omni Search...</MenuText>
+          <CanonicalName>Omni Search...</CanonicalName>
+          <CommandName>Omni Search...</CommandName>
+          <ToolTipText>A single unified search box for navigation and invocation of VS features</ToolTipText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <KeyBindings>
+    <!-- TODO: Someone else claims this keybinding, we'll have to figure out how to preempt them. -->
+    <KeyBinding guid="guidPackageCommandSet" id="InvokeSearchCommandId" editor="guidVSStd97" key1="T" mod1="Control"/>
+
+    <!-- TODO: better key combinations. -->
+    <KeyBinding guid="guidPackageCommandSet" id="InvokeSearchCommandId" editor="guidVSStd97" key1="Q" mod1="Alt"/>
+  </KeyBindings>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidInvokeSearchCommandPackage" value="{2fa4535a-8cbc-4a10-9d18-30f8d4d75583}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidPackageCommandSet" value="{0c9efb12-486c-4c6e-8e7c-7071409818c0}">
+      <IDSymbol name="OmniBoxSearchGroup" value="0x1020" />
+      <IDSymbol name="InvokeSearchCommandId" value="0x0100" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
