@@ -1,4 +1,4 @@
-﻿namespace VSOmniBox.UI
+﻿namespace VSOmniBox.UI.Colors
 {
     using System;
     using Microsoft.VisualStudio.Shell;

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26711.1
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSOmniBox", "VSOmniBox\VSOmniBox.csproj", "{E31B61BD-2251-40EB-AA1D-BF2EFF3CEC69}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSOmniBox.API", "VSOmniBox.API\VSOmniBox.API.csproj", "{7A5794CD-8B71-490D-BF3B-8A1A44E6EDE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSOmniBox.DefaultProviders", "VSOmniBox.DefaultProviders\VSOmniBox.DefaultProviders.csproj", "{360855E2-2692-41A7-B620-AA46B08B9062}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7A5794CD-8B71-490D-BF3B-8A1A44E6EDE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A5794CD-8B71-490D-BF3B-8A1A44E6EDE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A5794CD-8B71-490D-BF3B-8A1A44E6EDE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{360855E2-2692-41A7-B620-AA46B08B9062}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{360855E2-2692-41A7-B620-AA46B08B9062}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{360855E2-2692-41A7-B620-AA46B08B9062}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{360855E2-2692-41A7-B620-AA46B08B9062}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

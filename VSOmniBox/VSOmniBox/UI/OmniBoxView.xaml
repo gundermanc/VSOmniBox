@@ -3,23 +3,68 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:VSOmniBox.UI"
+        xmlns:ui="clr-namespace:VSOmniBox.UI"
+        xmlns:uicolors="clr-namespace:VSOmniBox.UI.Colors"
+        xmlns:uiconverters="clr-namespace:VSOmniBox.UI.Converters"
         mc:Ignorable="d" 
-        Height="300"
+        Background="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundBrushKey}}"
+        FocusManager.FocusedElement="{Binding ElementName=SearchTextBox}"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        SizeToContent="Height"
         Width="300"
         WindowStartupLocation="CenterOwner"
-        WindowStyle="None"
-        ShowInTaskbar="False"
-        ResizeMode="NoResize"
-        Background="{DynamicResource {x:Static local:VSColors.PopupBackgroundBrushKey}}">
+        WindowStyle="None">
+    <Window.Resources>
+
+        <uiconverters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <DataTemplate x:Key="SearchBoxDataTemplate">
+            <TextBlock Text="{Binding Path=Title}" />
+        </DataTemplate>
+
+        <Style x:Key="PopupBorderColor" TargetType="{x:Type Border}">
+            <Setter Property="BorderThickness" Value="1.0" />
+            <!-- TODO: use something other than the text brush here. -->
+            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <!-- TODO: use something other than the text brush here. -->
+            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
+            <Setter Property="Margin" Value="5" />
+        </Style>
+
+        <Style TargetType="{x:Type ListBox}">
+            <!-- TODO: use something other than the text brush here. -->
+            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Margin" Value="5,0,5,5" />
+            <Setter Property="MaxHeight" Value="200" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Style.Triggers>
+                <Trigger Property="ItemsControl.HasItems" Value="True">
+                    <Setter Property="Visibility" Value="Visible" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding DismissCommand}" Key="Esc"/>
+    </Window.InputBindings>
+
     <Window.Content>
-        <Border BorderThickness="1.0" BorderBrush="{DynamicResource {x:Static local:VSColors.PopupBackgroundTextBrushKey}}">
-            <TextBlock
-                Text="The Future Home of VS OmniBox :)"
-                FontSize="18"
-                Foreground="{DynamicResource {x:Static local:VSColors.PopupBackgroundTextBrushKey}}"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center" />
+        <Border Style="{StaticResource PopupBorderColor}">
+            <DockPanel LastChildFill="True">
+                <TextBox Name="SearchTextBox"
+                         DockPanel.Dock="Top"
+                         FontSize="20" />
+                <ListBox DockPanel.Dock="Bottom"
+                         ItemsSource="{Binding SearchResults}"
+                         ItemTemplate="{StaticResource SearchBoxDataTemplate}" />
+            </DockPanel>
         </Border>
     </Window.Content>
 </Window>
