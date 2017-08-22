@@ -5,6 +5,9 @@
 
     public interface IOmniBoxSearchProvider
     {
-        Task StartSearch(IOmniBoxSearchCallback searchCallback, CancellationToken cancellationToken);
+        Task StartSearch(
+            string searchString,
+            IOmniBoxSearchCallback searchCallback,
+            CancellationToken cancellationToken);
     }
 }

@@ -2,18 +2,15 @@
 {
     using System;
 
-    public sealed class OmniBoxItem : IOmniBoxItem
+    public abstract class OmniBoxItem : IOmniBoxItem
     {
-        public OmniBoxItem(string title)
+        public OmniBoxItem(string title = null)
         {
-            if (string.IsNullOrWhiteSpace(title))
-            {
-                throw new ArgumentException("Cannot be null or whitespace", nameof(title));
-            }
-
             this.Title = title;
         }
 
-        public string Title { get; }
+        public virtual string Title { get; }
+
+        public abstract void Invoke();
     }
 }

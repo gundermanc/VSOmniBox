@@ -7,19 +7,19 @@
 
     internal sealed class SearchTask
     {
-        private readonly string query;
+        private readonly string searchString;
         private readonly IOmniBoxSearchCallback searchCallback;
         private readonly IEnumerable<IOmniBoxSearchProvider> searchProviders;
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
         public static SearchTask StartNew(
-            string query,
+            string searchString,
             IOmniBoxSearchCallback searchCallback,
             IEnumerable<IOmniBoxSearchProvider> searchProviders)
         {
-            if (string.IsNullOrWhiteSpace(query))
+            if (string.IsNullOrWhiteSpace(searchString))
             {
-                throw new System.ArgumentException("Must be non-empty and non-null", nameof(query));
+                throw new System.ArgumentException("Must be non-empty and non-null", nameof(searchString));
             }
 
             if (searchCallback == null)
@@ -32,18 +32,18 @@
                 throw new System.ArgumentNullException(nameof(searchProviders));
             }
 
-            var searchTask = new SearchTask(query, searchCallback, searchProviders);
+            var searchTask = new SearchTask(searchString, searchCallback, searchProviders);
 
             searchTask.Start();
             return searchTask;
         }
 
         private SearchTask(
-            string query,
+            string searchString,
             IOmniBoxSearchCallback searchCallback,
             IEnumerable<IOmniBoxSearchProvider> searchProviders)
         {
-            this.query = query;
+            this.searchString = searchString;
             this.searchCallback = searchCallback;
             this.searchProviders = searchProviders;
         }
@@ -58,6 +58,9 @@
         }
 
         private void PerformSearch(IOmniBoxSearchProvider searchProvider)
-            => searchProvider.StartSearch(this.searchCallback, this.cancellationTokenSource.Token);
+            => searchProvider.StartSearch(
+                this.searchString,
+                this.searchCallback,
+                this.cancellationTokenSource.Token);
     }
 }
