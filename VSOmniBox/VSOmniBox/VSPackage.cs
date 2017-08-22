@@ -53,6 +53,8 @@
         internal static IComponentModel ComponentModel
             => componentModel ?? (componentModel = Package.GetGlobalService(typeof(SComponentModel)) as IComponentModel);
 
+        internal static IServiceProvider ServiceProvider { get; private set; }
+
         internal static TService GetMefService<TService>() where TService : class
         {
             var mefService = ThreadHelper.JoinableTaskFactory.Run(async delegate
@@ -77,7 +79,8 @@
         {
             base.Initialize();
 
-            CommandTarget.CreateAndRegister(this);
+            ServiceProvider = this;
+            CommandTarget.CreateAndRegister(ServiceProvider);
         }
 
         #endregion

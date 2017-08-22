@@ -1,9 +1,10 @@
 ﻿namespace VSOmniBox.UI.Commands
 {
     using System;
+    using System.Windows.Input;
     using VSOmniBox.UI;
 
-    internal sealed class DismissCommand
+    internal sealed class DismissCommand : ICommand
     {
         public DismissCommand(OmniBoxViewModel viewModel)
         {

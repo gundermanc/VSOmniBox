@@ -3,5 +3,7 @@
     public interface IOmniBoxItem
     {
         string Title { get; }
+
+        void Invoke();
     }
 }

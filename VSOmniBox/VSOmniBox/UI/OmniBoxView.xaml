@@ -5,7 +5,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:ui="clr-namespace:VSOmniBox.UI"
         xmlns:uicolors="clr-namespace:VSOmniBox.UI.Colors"
-        xmlns:uiconverters="clr-namespace:VSOmniBox.UI.Converters"
         mc:Ignorable="d" 
         Background="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundBrushKey}}"
         FocusManager.FocusedElement="{Binding ElementName=SearchTextBox}"
@@ -16,8 +15,6 @@
         WindowStartupLocation="CenterOwner"
         WindowStyle="None">
     <Window.Resources>
-
-        <uiconverters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
         <DataTemplate x:Key="SearchBoxDataTemplate">
             <TextBlock Text="{Binding Path=Title}" />
@@ -60,10 +57,18 @@
             <DockPanel LastChildFill="True">
                 <TextBox Name="SearchTextBox"
                          DockPanel.Dock="Top"
-                         FontSize="20" />
+                         FontSize="20">
+                    <TextBox.InputBindings>
+                        <KeyBinding Command="{Binding DownCommand}" Key="Down" />
+                        <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
+                        <KeyBinding Command="{Binding UpCommand}" Key="Up" />
+                    </TextBox.InputBindings>
+
+                </TextBox>
                 <ListBox DockPanel.Dock="Bottom"
                          ItemsSource="{Binding SearchResults}"
-                         ItemTemplate="{StaticResource SearchBoxDataTemplate}" />
+                         ItemTemplate="{StaticResource SearchBoxDataTemplate}"
+                         SelectedIndex="{Binding SelectedIndex}" />
             </DockPanel>
         </Border>
     </Window.Content>

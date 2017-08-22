@@ -113,6 +113,7 @@
         public void AddItem(IOmniBoxItem item)
         {
             // TODO: this is going to flood the dispatcher queue and cause a HUGE number of allocs unless we batch this.
+            // TODO: ensure we cancel search tasks and check window is still up before adding.
             this.view.Dispatcher.InvokeAsync(() =>
             {
                 this.model.SearchResults.Add(item);
