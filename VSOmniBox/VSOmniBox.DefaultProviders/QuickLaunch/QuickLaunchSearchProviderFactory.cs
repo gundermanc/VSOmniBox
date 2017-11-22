@@ -3,10 +3,11 @@
     using System.ComponentModel.Composition;
     using Microsoft.VisualStudio.Utilities;
     using VSOmniBox.API;
+    using VSOmniBox.DefaultProviders.NavigateTo;
 
     [Export(typeof(IOmniBoxSearchProviderFactory))]
     [Name(nameof(QuickLaunchSearchProviderFactory))]
-    [Order]
+    [Order(After = nameof(NavigateToSearchProviderFactory))]
     internal sealed class QuickLaunchSearchProviderFactory : IOmniBoxSearchProviderFactory
     {
         private readonly IOmniBoxShellServicesFactory shellServicesFactory;

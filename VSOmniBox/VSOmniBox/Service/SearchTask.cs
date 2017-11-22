@@ -58,7 +58,7 @@
         }
 
         private void PerformSearch(IOmniBoxSearchProvider searchProvider)
-            => searchProvider.StartSearch(
+            => searchProvider.StartSearchAsync(
                 this.searchString,
                 this.searchCallback,
                 this.cancellationTokenSource.Token);

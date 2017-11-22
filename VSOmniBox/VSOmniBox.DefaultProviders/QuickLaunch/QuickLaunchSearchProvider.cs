@@ -17,8 +17,6 @@
         private const string MREProviderCategory = "3ef528c5-c45a-47e0-b9ee-a212a32a99ec";
         private readonly IEnumerable<IVsSearchProvider> searchProviders;
 
-        private IEnumerable<System.Threading.Tasks.Task> searchTasks;
-
         public static QuickLaunchSearchProvider Create(IServiceProvider serviceProvider)
         {
             if (serviceProvider == null)
@@ -70,7 +68,7 @@
         // TODO: is this wrong?
         private static uint cookie;
 
-        public async System.Threading.Tasks.Task StartSearch(
+        public async System.Threading.Tasks.Task StartSearchAsync(
             string searchString,
             IOmniBoxSearchCallback searchCallback,
             CancellationToken cancellationToken)
