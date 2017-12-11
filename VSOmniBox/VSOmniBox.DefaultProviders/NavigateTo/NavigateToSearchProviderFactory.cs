@@ -27,7 +27,7 @@
             this.itemProviderFactories = itemProviderFactories;
         }
 
-        public IOmniBoxSearchProvider GetSearchProvider()
+        public IOmniBoxSearchProvider CreateSearchProvider()
         {
             return this.searchProvider
                 ?? (this.searchProvider = NavigateToSearchProvider.Create(this.CreateItemProviders()));

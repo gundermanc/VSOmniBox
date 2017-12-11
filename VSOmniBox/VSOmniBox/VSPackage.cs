@@ -80,7 +80,7 @@
             base.Initialize();
 
             ServiceProvider = this;
-            CommandTarget.CreateAndRegister(ServiceProvider);
+            ShellCommandTarget.CreateAndRegister(ServiceProvider);
         }
 
         #endregion

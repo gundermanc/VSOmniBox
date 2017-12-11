@@ -7,7 +7,7 @@
   <!--This header contains the command ids for the menus provided by the shell. -->
   <Extern href="vsshlids.h"/>
 
-  <Commands package="guidInvokeSearchCommandPackage">
+  <Commands package="guidVSOmniBoxPackage">
 
     <!-- In this section you can define new menu groups. A menu group is a container for
          other menus or buttons (commands); from a visual point of view you can see the
@@ -53,7 +53,7 @@
 
   <Symbols>
     <!-- This is the package guid. -->
-    <GuidSymbol name="guidInvokeSearchCommandPackage" value="{2fa4535a-8cbc-4a10-9d18-30f8d4d75583}" />
+    <GuidSymbol name="guidVSOmniBoxPackage" value="{2fa4535a-8cbc-4a10-9d18-30f8d4d75583}" />
 
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidPackageCommandSet" value="{0c9efb12-486c-4c6e-8e7c-7071409818c0}">

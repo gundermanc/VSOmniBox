@@ -56,14 +56,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Commands\CommandTarget.cs" />
+    <Compile Include="Commands\EditorCommandTarget.cs" />
+    <Compile Include="Commands\ShellCommandTarget.cs" />
+    <Compile Include="Commands\TextViewCreationListener.cs" />
     <Compile Include="Service\OmniBoxBroker.cs" />
-    <Compile Include="Service\OmniBoxService.cs" />
     <Compile Include="Service\OmniBoxShellServicesFactory.cs" />
     <Compile Include="Service\SearchTask.cs" />
+    <Compile Include="UI\Commands\BackspaceCommand.cs" />
     <Compile Include="UI\Commands\DismissCommand.cs" />
     <Compile Include="UI\Commands\DownCommand.cs" />
     <Compile Include="UI\Commands\InvokeCommand.cs" />
+    <Compile Include="UI\Commands\LeftCommand.cs" />
+    <Compile Include="UI\Commands\RightCommand.cs" />
     <Compile Include="UI\Commands\UpCommand.cs" />
     <Compile Include="UI\OmniBoxView.xaml.cs">
       <DependentUpon>OmniBoxView.xaml</DependentUpon>

@@ -57,18 +57,22 @@
             <DockPanel LastChildFill="True">
                 <TextBox Name="SearchTextBox"
                          DockPanel.Dock="Top"
-                         FontSize="20">
+                         FontSize="20"
+                         Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.InputBindings>
+                        <KeyBinding Command="{Binding BackspaceCommand}" Key="Backspace" />
                         <KeyBinding Command="{Binding DownCommand}" Key="Down" />
+                        <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
                         <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
+                        <KeyBinding Command="{Binding LeftCommand}" Key="Left" />
+                        <KeyBinding Command="{Binding RightCommand}" Key="Right" />
                         <KeyBinding Command="{Binding UpCommand}" Key="Up" />
                     </TextBox.InputBindings>
-
                 </TextBox>
                 <ListBox DockPanel.Dock="Bottom"
                          ItemsSource="{Binding SearchResults}"
                          ItemTemplate="{StaticResource SearchBoxDataTemplate}"
-                         SelectedIndex="{Binding SelectedIndex}" />
+                         SelectedIndex="{Binding SelectedItemIndex}" />
             </DockPanel>
         </Border>
     </Window.Content>

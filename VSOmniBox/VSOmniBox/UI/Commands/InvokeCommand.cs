@@ -12,18 +12,19 @@
             this.model = model ?? throw new ArgumentNullException(nameof(model));
         }
 
-        // TODO: implement event handler.
+#pragma warning disable 067
         public event EventHandler CanExecuteChanged;
+#pragma warning restore 067
 
-        public bool CanExecute(object parameter)
-        {
-            return this.model.IsValidSelectionIndex(this.model.SelectedIndex) &&
-                (this.model.SelectedIndex > -1);
-        }
+        public bool CanExecute(object parameter) => true;
 
         public void Execute(object parameter)
         {
-            this.model.SearchResults[this.model.SelectedIndex].Invoke();
+            if (this.model.IsValidSelectionIndex(this.model.SelectedItemIndex) &&
+                (this.model.SelectedItemIndex > -1))
+            {
+                this.model.SearchResults[this.model.SelectedItemIndex].Invoke();
+            }
         }
     }
 }

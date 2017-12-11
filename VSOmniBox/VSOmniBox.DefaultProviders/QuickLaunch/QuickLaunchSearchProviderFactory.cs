@@ -18,7 +18,7 @@
             this.shellServicesFactory = shellServicesFactory;
         }
 
-        public IOmniBoxSearchProvider GetSearchProvider()
+        public IOmniBoxSearchProvider CreateSearchProvider()
         {
             return QuickLaunchSearchProvider.Create(this.shellServicesFactory.ServiceProvider);
         }

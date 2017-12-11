@@ -54,7 +54,6 @@
     <Compile Include="IOmniBoxSearchCallback.cs" />
     <Compile Include="IOmniBoxSearchProvider.cs" />
     <Compile Include="IOmniBoxSearchProviderFactory.cs" />
-    <Compile Include="IOmniBoxService.cs" />
     <Compile Include="IOmniBoxShellServicesFactory.cs" />
     <Compile Include="OmniBoxItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

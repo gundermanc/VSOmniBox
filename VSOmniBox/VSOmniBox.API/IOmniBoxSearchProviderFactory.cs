@@ -2,6 +2,6 @@
 {
     public interface IOmniBoxSearchProviderFactory
     {
-        IOmniBoxSearchProvider GetSearchProvider();
+        IOmniBoxSearchProvider CreateSearchProvider();
     }
 }

@@ -3,26 +3,26 @@
     using System;
     using System.Windows.Input;
 
-    internal sealed class DownCommand : ICommand
+    internal sealed class RightCommand : ICommand
     {
         private readonly OmniBoxViewModel model;
 
-        public DownCommand(OmniBoxViewModel model)
+        public RightCommand(OmniBoxViewModel model)
         {
             this.model = model ?? throw new ArgumentNullException(nameof(model));
         }
 
 #pragma warning disable 067
         public event EventHandler CanExecuteChanged;
-#pragma warning disable 067
+#pragma warning restore 067
 
         public bool CanExecute(object parameter) => true;
 
         public void Execute(object parameter)
         {
-            if (this.model.IsValidSelectionIndex(this.model.SelectedItemIndex + 1))
+            if (this.model.CaretIndex < this.model.SearchString.Length)
             {
-                ++this.model.SelectedItemIndex;
+                ++this.model.CaretIndex;
             }
         }
     }
