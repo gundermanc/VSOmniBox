@@ -30,12 +30,9 @@
             this.broker = broker ?? throw new ArgumentNullException(nameof(broker));
 
             // Initialize commands.
-            this.BackspaceCommand = new BackspaceCommand(this);
             this.DismissCommand = new DismissCommand(this);
             this.DownCommand = new DownCommand(this);
             this.InvokeCommand = new InvokeCommand(this);
-            this.LeftCommand = new LeftCommand(this);
-            this.RightCommand = new RightCommand(this);
             this.UpCommand = new UpCommand(this);
         }
 
@@ -47,17 +44,11 @@
 
         #region Commands
 
-        public ICommand BackspaceCommand { get; }
-
         public ICommand DismissCommand { get; }
 
         public ICommand DownCommand { get; }
 
         public ICommand InvokeCommand { get; }
-
-        public ICommand LeftCommand { get;  }
-
-        public ICommand RightCommand { get; }
 
         public ICommand UpCommand { get; }
 

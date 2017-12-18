@@ -91,53 +91,7 @@
 
         #endregion
 
-        internal void InvokeBackspaceCommand()
-        {
-            if (this.model?.BackspaceCommand.CanExecute(null) ?? false)
-            {
-                this.model.BackspaceCommand.Execute(null);
-            }
-        }
-
-        internal void InvokeDownCommand()
-        {
-            if (this.model?.DownCommand.CanExecute(null) ?? false)
-            {
-                this.model.DownCommand.Execute(null);
-            }
-        }
-
-        internal void InvokeLeftCommand()
-        {
-            if (this.model?.LeftCommand.CanExecute(null) ?? false)
-            {
-                this.model.LeftCommand.Execute(null);
-            }
-        }
-
-        internal void InvokeRightCommand()
-        {
-            if (this.model?.RightCommand.CanExecute(null) ?? false)
-            {
-                this.model.RightCommand.Execute(null);
-            }
-        }
-
-        internal void InvokeReturnCommand()
-        {
-            if (this.model?.DownCommand.CanExecute(null) ?? false)
-            {
-                this.model.InvokeCommand.Execute(null);
-            }
-        }
-
-        internal void InvokeUpCommand()
-        {
-            if (this.model?.UpCommand.CanExecute(null) ?? false)
-            {
-                this.model.UpCommand.Execute(null);
-            }
-        }
+        internal void RaiseRoutedEvent(RoutedEventArgs e) => this.view?.RaiseEvent(e);
 
         private IEnumerable<IOmniBoxSearchProvider> SearchProviders
             => this.searchProviders ??
@@ -168,7 +122,7 @@
         {
             if (e.PropertyName == nameof(OmniBoxViewModel.SearchString))
             {
-                this.StartOrUpdateSearch(this.view.SearchTextBox.Text);
+                this.StartOrUpdateSearch(this.model.SearchString);
             }
         }
 
