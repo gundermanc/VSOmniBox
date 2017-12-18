@@ -14,10 +14,10 @@
     internal sealed class OmniBoxBroker : IOmniBoxBroker, IOmniBoxSearchCallback
     {
         private readonly IEnumerable<Lazy<IOmniBoxSearchProviderFactory>> searchProviderFactories;
-        private readonly OmniBoxViewModel model;
 
         private IEnumerable<IOmniBoxSearchProvider> searchProviders;
 
+        private OmniBoxViewModel model;
         private OmniBoxView view;
         private SearchTask currentSearch;
 
@@ -26,9 +26,6 @@
         {
             this.searchProviderFactories = searchProviderFactories
                 ?? throw new ArgumentNullException(nameof(searchProviderFactories));
-
-            this.model = new OmniBoxViewModel(this);
-            this.model.PropertyChanged += OnModelPropertyChanged;
         }
 
         #region IOmniBoxBroker
@@ -55,23 +52,6 @@
             }
         }
 
-        public void StartOrUpdateSearch(string searchQuery)
-        {
-            this.StopSearch();
-            this.model.SearchResults.Clear();
-
-            if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                this.currentSearch = SearchTask.StartNew(searchQuery, this, this.SearchProviders);
-            }
-        }
-
-        public void StopSearch()
-        {
-            this.currentSearch?.Cancel();
-            this.currentSearch = null;
-        }
-
         #endregion
 
         #region IOmniBoxSearchCallback
@@ -91,13 +71,30 @@
 
         #endregion
 
-        internal void RaiseRoutedEvent(RoutedEventArgs e) => this.view?.RaiseEvent(e);
-
         private IEnumerable<IOmniBoxSearchProvider> SearchProviders
             => this.searchProviders ??
             (searchProviders = this.searchProviderFactories.Select(factory => factory.Value.CreateSearchProvider())).ToList();
 
         private bool IsSearchInProgress => this.currentSearch != null;
+
+        internal void RaiseRoutedEvent(RoutedEventArgs e) => this.view?.RaiseEvent(e);
+
+        private void StartOrUpdateSearch(string searchQuery)
+        {
+            this.StopSearch();
+            this.model.SearchResults.Clear();
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                this.currentSearch = SearchTask.StartNew(searchQuery, this, this.SearchProviders);
+            }
+        }
+
+        private void StopSearch()
+        {
+            this.currentSearch?.Cancel();
+            this.currentSearch = null;
+        }
 
         private void OnDeactivated(object sender, EventArgs e) => this.IsVisible = false;
 
@@ -106,7 +103,10 @@
         private void CreateView()
         {
             Debug.Assert(this.view == null);
-            Debug.Assert(this.model != null);
+            Debug.Assert(this.model == null);
+
+            this.model = new OmniBoxViewModel(this);
+            this.model.PropertyChanged += OnModelPropertyChanged;
 
             this.view = new OmniBoxView()
             {
@@ -129,6 +129,10 @@
         private void DestroyView()
         {
             Debug.Assert(this.view != null);
+            Debug.Assert(this.model != null);
+
+            this.model.PropertyChanged += OnModelPropertyChanged;
+            this.model = null;
 
             this.view.Closed -= OnViewClosed;
             this.view.Deactivated -= OnDeactivated;
