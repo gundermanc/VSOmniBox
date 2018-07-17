@@ -85,9 +85,10 @@
 
             var filteredAndSortedResults = providerResultsLists
                 .SelectMany(select => select)
-                .Select(result => (item: result, match: patternMatcher.TryMatch(result.Title)))
-                .Where(patternMatch => patternMatch.match != null)
-                .OrderBy(result => result.match)
+                .Select(result => (item: result, titleMatch: patternMatcher.TryMatch(result.Title), descriptionMatch: patternMatcher.TryMatch(result.Description)))
+                .Where(patternMatch => patternMatch.titleMatch != null || patternMatch.descriptionMatch != null)
+                .OrderBy(result => result.titleMatch)
+                .ThenBy(result => result.descriptionMatch)
                 .Select(result => result.item);
 
             var builder = ImmutableArray.CreateBuilder<OmniBoxItem>();

@@ -16,6 +16,8 @@
 
         public override string Title => this.searchItemResult.DisplayText;
 
+        public override string Description => this.searchItemResult.Description;
+
         public override void Invoke() => this.searchItemResult.InvokeAction();
     }
 }

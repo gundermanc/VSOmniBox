@@ -126,7 +126,7 @@
     <Compile Include="QuickLaunch\QuickLaunchItemsSource.cs" />
     <Compile Include="QuickLaunch\QuickLaunchItemsSourceProvider.cs" />
     <Compile Include="QuickLaunch\SearchCallbackShim.cs" />
-    <Compile Include="QuickLaunch\SearchItemResultShim.cs" />
+    <Compile Include="QuickLaunch\SearchResultShim.cs" />
     <Compile Include="QuickLaunch\SearchQueryShim.cs" />
     <Compile Include="QuickLaunch\SearchTokenShim.cs" />
   </ItemGroup>

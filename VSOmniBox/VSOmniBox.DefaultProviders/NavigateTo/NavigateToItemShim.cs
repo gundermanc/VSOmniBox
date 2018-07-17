@@ -19,6 +19,8 @@ namespace VSOmniBox.DefaultProviders.NavigateTo
 
         public override string Title => this.displayItem.Name;
 
+        public override string Description => this.displayItem.Description;
+
         public override void Invoke() => this.displayItem.NavigateTo();
     }
 }
