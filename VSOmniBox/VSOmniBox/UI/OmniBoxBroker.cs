@@ -46,8 +46,9 @@
                     }
                     else
                     {
+                        var owner = this.view.Owner;
                         this.view.Close();
-                        this.view.Owner.Activate();
+                        owner.Activate();
                     }
                 }
             }

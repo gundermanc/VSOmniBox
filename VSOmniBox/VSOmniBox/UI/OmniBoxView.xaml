@@ -35,6 +35,7 @@
         <Style TargetType="{x:Type ListBox}">
             <!-- TODO: use something other than the text brush here. -->
             <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
+            <Setter Property="Focusable" Value="False" />
             <Setter Property="Margin" Value="5" />
             <Setter Property="Margin" Value="5,0,5,5" />
             <Setter Property="MaxHeight" Value="200" />
@@ -66,7 +67,8 @@
                         <KeyBinding Command="{Binding UpCommand}" Key="Up" />
                     </TextBox.InputBindings>
                 </TextBox>
-                <ListBox DockPanel.Dock="Bottom"
+                <ListBox x:Name="ResultsBox"
+                         DockPanel.Dock="Bottom"
                          ItemsSource="{Binding SearchResults}"
                          ItemTemplate="{StaticResource SearchBoxDataTemplate}"
                          SelectedIndex="{Binding SelectedItemIndex}" />

@@ -10,7 +10,7 @@
     using VSOmniBox.Data;
     using VSOmniBox.UI.Commands;
 
-    internal sealed class OmniBoxViewModel : INotifyPropertyChanged
+    internal sealed class OmniBoxViewModel : INotifyPropertyChanged, IInvokable
     {
         private readonly IOmniBoxUIService broker;
 

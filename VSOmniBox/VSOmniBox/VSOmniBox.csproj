@@ -63,6 +63,7 @@
     <Compile Include="Data\SearchDataModel.cs" />
     <Compile Include="Data\SearchProviderTask.cs" />
     <Compile Include="Data\SearchTask.cs" />
+    <Compile Include="UI\IInvokable.cs" />
     <Compile Include="UI\OmniBoxBroker.cs" />
     <Compile Include="Data\SearchController.cs" />
     <Compile Include="UI\Commands\DismissCommand.cs" />
