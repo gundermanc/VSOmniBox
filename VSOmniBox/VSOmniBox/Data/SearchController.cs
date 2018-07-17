@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.ComponentModel.Composition;
+    using System.Globalization;
     using System.Threading.Tasks;
+    using Microsoft.VisualStudio.Text.PatternMatching;
     using Microsoft.VisualStudio.Threading;
     using VSOmniBox.API.Data;
 
@@ -13,18 +15,22 @@
     {
         private readonly IEnumerable<Lazy<IOmniBoxItemsSourceProvider>> itemsSourceProviders;
         private readonly JoinableTaskContext joinableTaskContext;
+        private readonly Lazy<IPatternMatcherFactory> patternMatcherFactory;
         private AsyncLazy<IReadOnlyList<IOmniBoxItemsSource>> itemsSources;
         private SearchTask currentSearch;
 
         [ImportingConstructor]
         public SearchController(
             [ImportMany]IEnumerable<Lazy<IOmniBoxItemsSourceProvider>> itemsSourceProviders,
-            JoinableTaskContext joinableTaskContext)
+            JoinableTaskContext joinableTaskContext,
+            Lazy<IPatternMatcherFactory> patternMatcherFactory)
         {
             this.itemsSourceProviders = itemsSourceProviders
                 ?? throw new ArgumentNullException(nameof(itemsSourceProviders));
             this.joinableTaskContext = joinableTaskContext
                 ?? throw new ArgumentNullException(nameof(joinableTaskContext));
+            this.patternMatcherFactory = patternMatcherFactory
+                ?? throw new ArgumentNullException(nameof(patternMatcherFactory));
 
             this.itemsSources = new AsyncLazy<IReadOnlyList<IOmniBoxItemsSource>>(
                 () => this.CreateSourcesAsync(), joinableTaskContext.Factory);
@@ -80,7 +86,7 @@
             {
                 try
                 {
-                    var searchDataModel = await this.currentSearch.SearchAsync(sources, searchString);
+                    var searchDataModel = await this.currentSearch.SearchAsync(sources, this.patternMatcherFactory.Value, searchString);
                     if (!(this.currentSearch?.IsDisposed ?? true))
                     {
                         this.DataModelUpdated?.Invoke(this, new ItemsUpdatedArgs(searchDataModel));

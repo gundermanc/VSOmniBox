@@ -1,8 +1,10 @@
 ﻿namespace VSOmniBox.Data
 {
+    using Microsoft.VisualStudio.Text.PatternMatching;
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Globalization;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -17,7 +19,10 @@
 
         public bool IsDisposed { get; private set; }
 
-        public async Task<SearchDataModel> SearchAsync(IEnumerable<IOmniBoxItemsSource> itemsSources, string searchString)
+        public async Task<SearchDataModel> SearchAsync(
+            IEnumerable<IOmniBoxItemsSource> itemsSources,
+            IPatternMatcherFactory patternMatcherFactory,
+            string searchString)
         {
             if (this.started)
             {
@@ -41,7 +46,8 @@
             this.CheckCanceled();
 
             // Sort and filter on background thread.
-            var sortedResults = await Task.Run(() => FlattenSortAndFilterLists(providerResultsLists));
+            var sortedResults = await Task.Run(
+                () => FlattenSortAndFilterLists(patternMatcherFactory, providerResultsLists, searchString));
 
             return new SearchDataModel(sortedResults);
         }
@@ -64,15 +70,28 @@
             }
         }
 
-        private static ImmutableArray<OmniBoxItem> FlattenSortAndFilterLists(IEnumerable<IEnumerable<OmniBoxItem>> providerResultsLists)
+        private static ImmutableArray<OmniBoxItem> FlattenSortAndFilterLists(
+            IPatternMatcherFactory patternMatcherFactory,
+            IEnumerable<IEnumerable<OmniBoxItem>> providerResultsLists,
+            string searchString)
         {
-            var flattenedResults = providerResultsLists
-                .SelectMany(select => select);
+            // Create pattern matcher for ranking and sorting items.
+            var patternMatcherOptions = new PatternMatcherCreationOptions(
+                CultureInfo.CurrentCulture,
+                PatternMatcherCreationFlags.AllowFuzzyMatching | PatternMatcherCreationFlags.AllowSimpleSubstringMatching);
+            var patternMatcher = patternMatcherFactory.CreatePatternMatcher(
+                searchString,
+                patternMatcherOptions);
+
+            var filteredAndSortedResults = providerResultsLists
+                .SelectMany(select => select)
+                .Select(result => (item: result, match: patternMatcher.TryMatch(result.Title)))
+                .Where(patternMatch => patternMatch.match != null)
+                .OrderBy(result => result.match)
+                .Select(result => result.item);
 
             var builder = ImmutableArray.CreateBuilder<OmniBoxItem>();
-            builder.AddRange(flattenedResults);
-
-            // TODO: sort.
+            builder.AddRange(filteredAndSortedResults);
 
             return builder.ToImmutable();
         }
