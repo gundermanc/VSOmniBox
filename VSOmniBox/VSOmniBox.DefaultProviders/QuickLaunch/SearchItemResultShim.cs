@@ -2,7 +2,7 @@
 {
     using System;
     using Microsoft.VisualStudio.Shell.Interop;
-    using VSOmniBox.API;
+    using VSOmniBox.API.Data;
 
     internal sealed class SearchItemResultShim : OmniBoxItem
     {

@@ -49,13 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IOmniBoxBroker.cs" />
-    <Compile Include="IOmniBoxItem.cs" />
-    <Compile Include="IOmniBoxSearchCallback.cs" />
-    <Compile Include="IOmniBoxSearchProvider.cs" />
-    <Compile Include="IOmniBoxSearchProviderFactory.cs" />
-    <Compile Include="IOmniBoxShellServicesFactory.cs" />
-    <Compile Include="OmniBoxItem.cs" />
+    <Compile Include="UI\IOmniBoxUIService.cs" />
+    <Compile Include="Data\OmniBoxItem.cs" />
+    <Compile Include="Data\IOmniBoxSearchSession.cs" />
+    <Compile Include="Data\IOmniBoxItemsSource.cs" />
+    <Compile Include="Data\IOmniBoxItemsSourceProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

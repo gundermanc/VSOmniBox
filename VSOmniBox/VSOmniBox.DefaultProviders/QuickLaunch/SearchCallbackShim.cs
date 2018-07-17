@@ -1,16 +1,28 @@
 ﻿namespace VSOmniBox.DefaultProviders.QuickLaunch
 {
     using System;
+    using System.Threading.Tasks;
     using Microsoft.VisualStudio.Shell.Interop;
-    using VSOmniBox.API;
+    using VSOmniBox.API.Data;
 
     internal sealed class SearchCallbackShim : IVsSearchProviderCallback
     {
-        private readonly IOmniBoxSearchCallback searchCallback;
+        private readonly IOmniBoxSearchSession searchCallback;
+        private readonly TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
 
-        public SearchCallbackShim(IOmniBoxSearchCallback searchCallback)
+        public Task Task => this.taskCompletionSource.Task;
+
+        public SearchCallbackShim(IOmniBoxSearchSession searchCallback)
         {
             this.searchCallback = searchCallback ?? throw new ArgumentNullException(nameof(searchCallback));
+        }
+
+        public void Cancel()
+        {
+            if (!this.taskCompletionSource.Task.IsCompleted || !this.taskCompletionSource.Task.IsCanceled)
+            {
+                this.taskCompletionSource.SetCanceled();
+            }
         }
 
         public void ReportProgress(IVsSearchTask pTask, uint dwProgress, uint dwMaxProgress)
@@ -20,7 +32,10 @@
 
         public void ReportComplete(IVsSearchTask pTask, uint dwResultsFound)
         {
-            // TODO: report complete.
+            if (!this.taskCompletionSource.Task.IsCompleted && !this.taskCompletionSource.Task.IsCanceled)
+            {
+                this.taskCompletionSource.SetResult(true);
+            }
         }
 
         public void ReportResult(IVsSearchTask pTask, IVsSearchItemResult pSearchItemResult)

@@ -3,8 +3,8 @@
     using System;
     using System.ComponentModel.Design;
     using System.Diagnostics;
-    using VSOmniBox.API;
-    using VSOmniBox.Service;
+    using VSOmniBox.API.UI;
+    using VSOmniBox.UI;
 
     // Receives commands from the IDE when the TextView is not focused.
     internal sealed class ShellCommandTarget
@@ -23,7 +23,7 @@
 
             if (commandService != null)
             {
-                var omniBoxBroker = VSPackage.GetMefService<IOmniBoxBroker>();
+                var omniBoxBroker = VSPackage.GetMefService<IOmniBoxUIService>();
 
                 Debug.Assert(omniBoxBroker != null);
 
@@ -34,7 +34,7 @@
             }
         }
 
-        private ShellCommandTarget(IMenuCommandService commandService, IOmniBoxBroker omniBoxBroker)
+        private ShellCommandTarget(IMenuCommandService commandService, IOmniBoxUIService omniBoxBroker)
         {
             this.InvokeSearchCommand = new MenuCommand(this.OnInvokeSearchCommand, InvokeSearchCommandId);
             commandService.AddCommand(this.InvokeSearchCommand);

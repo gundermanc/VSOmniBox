@@ -7,7 +7,7 @@
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.OLE.Interop;
     using Microsoft.VisualStudio.TextManager.Interop;
-    using VSOmniBox.Service;
+    using VSOmniBox.UI;
 
     // This nasty bit of hackery is necessary to work around the editor's monopoly
     // on commands..when the editor is open, it seems to steal every keystroke

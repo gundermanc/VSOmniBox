@@ -6,8 +6,8 @@
     using Microsoft.VisualStudio.Text.Editor;
     using Microsoft.VisualStudio.TextManager.Interop;
     using Microsoft.VisualStudio.Utilities;
-    using VSOmniBox.API;
-    using VSOmniBox.Service;
+    using VSOmniBox.API.UI;
+    using VSOmniBox.UI;
 
     [Export(typeof(IVsTextViewCreationListener))]
     [ContentType("any")]
@@ -16,12 +16,12 @@
     internal sealed class TextViewCreationListener : IVsTextViewCreationListener
     {
         private readonly IVsEditorAdaptersFactoryService adaptersFactoryService;
-        private readonly IOmniBoxBroker omniBoxBroker;
+        private readonly IOmniBoxUIService omniBoxBroker;
 
         [ImportingConstructor]
         public TextViewCreationListener(
             IVsEditorAdaptersFactoryService adaptersFactoryService,
-            IOmniBoxBroker omniBoxBroker)
+            IOmniBoxUIService omniBoxBroker)
         {
             this.adaptersFactoryService = adaptersFactoryService
                 ?? throw new ArgumentNullException(nameof(adaptersFactoryService));

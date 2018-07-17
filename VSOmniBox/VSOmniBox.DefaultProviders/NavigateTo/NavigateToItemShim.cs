@@ -3,7 +3,7 @@ namespace VSOmniBox.DefaultProviders.NavigateTo
 {
     using System;
     using Microsoft.VisualStudio.Language.NavigateTo.Interfaces;
-    using VSOmniBox.API;
+    using VSOmniBox.API.Data;
 
     internal sealed class NavigateToItemShim : OmniBoxItem
     {
