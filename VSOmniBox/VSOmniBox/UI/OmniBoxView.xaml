@@ -45,6 +45,7 @@
             <Setter Property="Margin" Value="5,0,5,5" />
             <Setter Property="MaxHeight" Value="200" />
             <Setter Property="MinHeight" Value="0" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
             <Setter Property="Visibility" Value="Collapsed" />
             <Style.Triggers>
                 <Trigger Property="ItemsControl.HasItems" Value="True">
