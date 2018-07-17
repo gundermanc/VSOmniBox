@@ -47,6 +47,7 @@
                     else
                     {
                         this.view.Close();
+                        this.view.Owner.Activate();
                     }
                 }
             }
@@ -70,6 +71,7 @@
             this.model = new OmniBoxViewModel(this);
             this.model.PropertyChanged += OnViewModelPropertyChanged;
 
+            // TODO: better ownership behavior for multiple window scenarios. For now, main is king.
             this.view = new OmniBoxView()
             {
                 DataContext = this.model,
