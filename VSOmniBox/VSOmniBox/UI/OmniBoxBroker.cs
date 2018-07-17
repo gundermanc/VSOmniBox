@@ -5,7 +5,6 @@
     using System.ComponentModel.Composition;
     using System.Diagnostics;
     using System.Windows;
-    using VSOmniBox.API.Data;
     using VSOmniBox.API.UI;
     using VSOmniBox.Data;
 
@@ -16,7 +15,6 @@
 
         private OmniBoxViewModel model;
         private OmniBoxView view;
-        private SearchTask currentSearch;
 
         [ImportingConstructor]
         public OmniBoxBroker(SearchController searchController)
@@ -40,6 +38,7 @@
                 {
                     if (value)
                     {
+                        this.searchController.WarmupFireAndForget();
                         this.CreateView();
 
                         this.view.Visibility = Visibility.Visible;

@@ -65,6 +65,14 @@
             }
         }
 
+        public void WarmupFireAndForget()
+        {
+            this.joinableTaskContext.Factory.RunAsync(async delegate
+            {
+                await this.CreateSourcesAsync();
+            });
+        }
+
         private async Task PerformSearch(SearchTask searchTask, IReadOnlyList<IOmniBoxItemsSource> sources, string searchString)
         {
             // Do the search, if and only if the search hasn't been canceled and we aren't preempted by another task.
