@@ -99,6 +99,9 @@
         {
             this.searchDataModel = dataModel;
             this.NotifyPropertyChanged(nameof(this.SearchResults));
+
+            // Select first item, if there is one.
+            this.SelectedItemIndex = dataModel.Items.Length > 0 ? 0 : -1;
         }
 
         #endregion
