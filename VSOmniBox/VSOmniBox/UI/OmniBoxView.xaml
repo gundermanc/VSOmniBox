@@ -6,12 +6,13 @@
         xmlns:ui="clr-namespace:VSOmniBox.UI"
         xmlns:uicolors="clr-namespace:VSOmniBox.UI.Colors"
         mc:Ignorable="d" 
-        Background="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundBrushKey}}"
+        AllowsTransparency="True"
+        Background="Transparent"
         FocusManager.FocusedElement="{Binding ElementName=SearchTextBox}"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         SizeToContent="Height"
-        Width="300"
+        Width="400"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None">
     <Window.Resources>
@@ -20,22 +21,26 @@
             <TextBlock Text="{Binding Path=Title}" />
         </DataTemplate>
 
-        <Style x:Key="PopupBorderColor" TargetType="{x:Type Border}">
+        <Style x:Key="PopupBorderStyle" TargetType="{x:Type Border}">
             <Setter Property="BorderThickness" Value="1.0" />
             <!-- TODO: use something other than the text brush here. -->
             <Setter Property="BorderBrush" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundBrushKey}}" />
+            <Setter Property="CornerRadius" Value="5" />
         </Style>
 
         <Style TargetType="{x:Type TextBox}">
             <!-- TODO: use something other than the text brush here. -->
             <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
             <Setter Property="Margin" Value="5" />
+            <Setter Property="FontSize" Value="30" />
         </Style>
 
         <Style TargetType="{x:Type ListBox}">
             <!-- TODO: use something other than the text brush here. -->
             <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
             <Setter Property="Focusable" Value="False" />
+            <Setter Property="FontSize" Value="16" />
             <Setter Property="Margin" Value="5" />
             <Setter Property="Margin" Value="5,0,5,5" />
             <Setter Property="MaxHeight" Value="200" />
@@ -54,11 +59,10 @@
     </Window.InputBindings>
 
     <Window.Content>
-        <Border Style="{StaticResource PopupBorderColor}">
+        <Border Style="{StaticResource PopupBorderStyle}">
             <DockPanel LastChildFill="True">
                 <TextBox Name="SearchTextBox"
                          DockPanel.Dock="Top"
-                         FontSize="20"
                          Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.InputBindings>
                         <KeyBinding Command="{Binding DownCommand}" Key="Down" />
