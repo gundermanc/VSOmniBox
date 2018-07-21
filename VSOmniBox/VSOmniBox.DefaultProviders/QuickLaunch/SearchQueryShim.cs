@@ -76,7 +76,7 @@
                     // Encountered a character that is upper-case, preceded by whitespace, or preceded by a symbol, start a new token.
                     else if (
                         char.IsUpper(startChar) ||
-                        (start > 0 && char.IsWhiteSpace(this.SearchString[start - 1]) ||
+                        (start == 0 || char.IsWhiteSpace(this.SearchString[start - 1]) ||
                         char.IsSymbol(this.SearchString[start - 1])))
                     {
                         // Start looking for end-point at next character.
@@ -91,10 +91,9 @@
                                 char.IsPunctuation(this.SearchString[end]));
                             end++);
 
-                        // Create token iff it is non-empty and starts with an upper-case letter.
+                        // Create token iff it is non-empty.
                         var tokenString = this.SearchString.Substring(start, end - start);
-                        if (tokenString.Length > 0 &&
-                            char.IsUpper(tokenString[0]))
+                        if (tokenString.Length > 0)
                         {
                             yield return new SearchTokenShim(tokenString, (uint)start);
                         }
