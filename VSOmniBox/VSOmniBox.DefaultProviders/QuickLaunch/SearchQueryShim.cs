@@ -1,6 +1,7 @@
 ﻿namespace VSOmniBox.DefaultProviders.QuickLaunch
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
@@ -47,18 +48,43 @@
 
         public string SearchString { get;  }
 
-        // TODO: is this right?
         public uint ParseError => VSConstants.S_OK;
 
-        public IVsSearchToken[] Tokens => this.tokens ?? (this.tokens = this.ParseTokens());
+        public IVsSearchToken[] Tokens => this.tokens ?? (this.tokens = this.ParseTokens().ToArray());
 
-        private IVsSearchToken[] ParseTokens()
+        /// <summary>
+        /// For now, we're parsing the search string, creating tokens for each of the individual
+        /// symbols or camel-case words in the string so that we hopefully match any potentials.
+        /// The pattern matcher is responsible for filtering down to the final well matching set.
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<IVsSearchToken> ParseTokens()
         {
-            // TODO: less "poor man's", more "deliverable product"...
-            // TODO: correct token start position.
-            return this.SearchString.Split(TokenSeparators, StringSplitOptions.RemoveEmptyEntries)
-                .Select(token => new SearchTokenShim(token, 0))
-                .ToArray();
+            for (int start = 0; start < this.SearchString.Length; start++)
+            {
+                char startChar = this.SearchString[start];
+
+                if (!char.IsWhiteSpace(startChar))
+                {
+                    if (char.IsSymbol(startChar))
+                    {
+                        yield return new SearchTokenShim(new string(startChar, 1), (uint)start);
+                    }
+                    else if (char.IsUpper(startChar) || (start > 0 && char.IsWhiteSpace(this.SearchString[start - 1]) || char.IsSymbol(this.SearchString[start - 1])))
+                    {
+                        int end = start + 1;
+                        for (; end < this.SearchString.Length && char.IsLetterOrDigit(this.SearchString[end]) && char.IsLower(this.SearchString[end]); end++);
+
+                        var tokenString = this.SearchString.Substring(start, end - start);
+                        if (tokenString.Length > 0 &&
+                            char.IsUpper(tokenString[0]) &&
+                            ((tokenString.Length == 1) || char.IsLower(tokenString[tokenString.Length - 1])))
+                        {
+                            yield return new SearchTokenShim(tokenString, (uint)start);
+                        }
+                    }
+                }
+            }
         }
     }
 }
