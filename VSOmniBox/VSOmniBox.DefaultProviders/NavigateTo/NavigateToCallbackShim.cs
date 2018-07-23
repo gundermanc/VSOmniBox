@@ -18,10 +18,7 @@
 
         public INavigateToOptions Options => StaticOptions;
 
-        // TODO: for some reason, at least one NavigateToItemProvider fails to indicate that it
-        // is complete, resulting in search getting 'stuck'. For now I'm working around this by
-        // timing out after two seconds.
-        public Task Task => Task.WhenAny(this.taskCompletionSource.Task, Task.Delay(2000));
+        public Task Task => this.taskCompletionSource.Task;
 
         public void AddItem(NavigateToItem item) => this.searchCallback.AddItem(NavigateToItemShim.Create(item));
 
