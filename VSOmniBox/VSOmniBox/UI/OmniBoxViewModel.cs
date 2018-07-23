@@ -96,8 +96,9 @@
                 if (this.SearchResults != value)
                 {
                     this.searchResults = value ?? throw new ArgumentNullException(nameof(value));
-
                     this.NotifyPropertyChanged(nameof(this.SearchResults));
+
+                    this.SelectFirstNonPivot();
                 }
             }
         }
@@ -143,6 +144,22 @@
         #endregion
 
         #region Private Impl
+
+        private void SelectFirstNonPivot()
+        {
+            int newSelectedIndex = -1;
+
+            for (int i = 0; i < this.SearchResults.Count; i++)
+            {
+                if (!(this.SearchResults[i] is OmniBoxPivotItem))
+                {
+                    newSelectedIndex = i;
+                    break;
+                }
+            }
+
+            this.SelectedItemIndex = newSelectedIndex;
+        }
 
         private void NotifyPropertyChanged(string paramName)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(paramName));
