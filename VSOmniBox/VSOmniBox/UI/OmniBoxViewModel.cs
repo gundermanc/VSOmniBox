@@ -17,6 +17,8 @@
 
         private string searchString = string.Empty;
         private int selectedItemIndex = -1;
+        private SearchDataModel searchDataModel;
+        private IReadOnlyList<OmniBoxItem> searchResults;
 
         public OmniBoxViewModel(IOmniBoxUIService broker)
         {
@@ -86,8 +88,19 @@
             }
         }
 
-        // TODO: make reference data model directly.
-        public IReadOnlyList<OmniBoxItem> SearchResults { get; private set; }
+        public IReadOnlyList<OmniBoxItem> SearchResults
+        {
+            get => this.searchResults;
+            private set
+            {
+                if (this.SearchResults != value)
+                {
+                    this.searchResults = value ?? throw new ArgumentNullException(nameof(value));
+
+                    this.NotifyPropertyChanged(nameof(this.SearchResults));
+                }
+            }
+        }
 
         #endregion
 
@@ -100,25 +113,31 @@
         {
             const int MaxResultsPerPivot = 3;
 
+            this.searchDataModel = searchDataModel;
+
             var resultsListBuilder = ImmutableArray.CreateBuilder<OmniBoxItem>();
 
             if (searchDataModel.CodeItems.Length > 0)
             {
-                resultsListBuilder.Add(new OmniBoxPivotItem(Strings.CodePivotItemTitle, string.Empty, action: null));
+                resultsListBuilder.Add(
+                    new OmniBoxPivotItem(
+                        Strings.CodePivotItemTitle,
+                        description: string.Empty,
+                        action: () => UpdateFromPivot(OmniBoxPivot.Code)));
                 resultsListBuilder.AddRange(searchDataModel.CodeItems.Take(MaxResultsPerPivot));
             }
 
             if (searchDataModel.IDEItems.Length > 0)
             {
-                resultsListBuilder.Add(new OmniBoxPivotItem(Strings.IDEPivotItemTitle, string.Empty, action: null));
+                resultsListBuilder.Add(
+                    new OmniBoxPivotItem(
+                        Strings.IDEPivotItemTitle,
+                        description: string.Empty,
+                        action: () => UpdateFromPivot(OmniBoxPivot.IDE)));
                 resultsListBuilder.AddRange(searchDataModel.IDEItems.Take(MaxResultsPerPivot));
             }
 
             this.SearchResults = resultsListBuilder.ToImmutable();
-            this.NotifyPropertyChanged(nameof(this.SearchResults));
-
-            // Select first item, if there is one.
-            this.SelectedItemIndex = this.SearchResults.Count > 0 ? 0 : -1;
         }
 
         #endregion
@@ -127,6 +146,19 @@
 
         private void NotifyPropertyChanged(string paramName)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(paramName));
+
+        private void UpdateFromPivot(OmniBoxPivot pivot)
+        {
+            switch (pivot)
+            {
+                case OmniBoxPivot.Code:
+                    this.SearchResults = this.searchDataModel.CodeItems;
+                    break;
+                case OmniBoxPivot.IDE:
+                    this.SearchResults = this.searchDataModel.IDEItems;
+                    break;
+            }
+        }
 
         #endregion
     }
