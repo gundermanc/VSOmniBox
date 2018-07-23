@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Immutable;
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows.Input;
     using VSOmniBox.API.Data;
     using VSOmniBox.API.UI;
@@ -16,7 +16,7 @@
 
         private string searchString = string.Empty;
         private int selectedItemIndex = -1;
-        private SearchDataModel searchDataModel = new SearchDataModel(ImmutableArray<OmniBoxItem>.Empty);
+        private SearchDataModel searchDataModel = SearchDataModel.Empty;
 
         public OmniBoxViewModel(IOmniBoxUIService broker)
         {
@@ -86,22 +86,27 @@
             }
         }
 
-        public IReadOnlyList<OmniBoxItem> SearchResults => this.searchDataModel.Items;
+        // TODO: make reference data model directly.
+        public IReadOnlyList<OmniBoxItem> SearchResults { get; private set; }
 
         #endregion
 
         #region Public Methods
 
         public bool IsValidSelectionIndex(int value)
-            => (value >= -1) && (value < this.searchDataModel.Items.Length);
+            => (value >= -1) && (value < this.SearchResults.Count);
 
         public void UpdateSearchDataModel(SearchDataModel dataModel)
         {
+            const int MaxResultsPerPivot = 3;
+            // TODO: use searchDataModel for results list instead of copying.
             this.searchDataModel = dataModel;
+            this.SearchResults = this.searchDataModel.CodeItems.Take(MaxResultsPerPivot)
+                .Concat(this.searchDataModel.IDEItems.Take(MaxResultsPerPivot)).ToList();
             this.NotifyPropertyChanged(nameof(this.SearchResults));
 
             // Select first item, if there is one.
-            this.SelectedItemIndex = dataModel.Items.Length > 0 ? 0 : -1;
+            this.SelectedItemIndex = this.SearchResults.Count > 0 ? 0 : -1;
         }
 
         #endregion

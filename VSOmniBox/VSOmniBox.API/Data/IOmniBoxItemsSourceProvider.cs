@@ -5,6 +5,6 @@
 
     public interface IOmniBoxItemsSourceProvider
     {
-        Task<IEnumerable<IOmniBoxItemsSource>> CreateSearchProvidersAsync();
+        Task<IEnumerable<IOmniBoxItemsSource>> CreateItemsSourcesAsync();
     }
 }

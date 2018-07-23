@@ -2,9 +2,9 @@
 {
     using System;
 
-    internal sealed class ItemsUpdatedArgs : EventArgs
+    internal sealed class SearchDataModelUpdatedArgs : EventArgs
     {
-        public ItemsUpdatedArgs(SearchDataModel model)
+        public SearchDataModelUpdatedArgs(SearchDataModel model)
         {
             this.Model = model ?? throw new ArgumentNullException(nameof(model));
         }

@@ -14,7 +14,7 @@
 
     [Export(typeof(IOmniBoxItemsSourceProvider))]
     [Name(nameof(NavigateToItemsSourceProvider))]
-    [Order(Before = nameof(QuickLaunchItemsSourceProvider))]
+    [OmniBoxPivot(OmniBoxPivot.Code)]
     internal sealed class NavigateToItemsSourceProvider : IOmniBoxItemsSourceProvider
     {
         private readonly SVsServiceProvider shellServiceProvider;
@@ -37,8 +37,13 @@
                 () => System.Threading.Tasks.Task.FromResult(this.CreateItemProviders()));
         }
 
-        public async Task<IEnumerable<IOmniBoxItemsSource>> CreateSearchProvidersAsync()
+        public async Task<IEnumerable<IOmniBoxItemsSource>> CreateItemsSourcesAsync()
         {
+            if (!this.joinableTaskContext.IsOnMainThread)
+            {
+                throw new InvalidOperationException("Must be created on the UI thread.");
+            }
+
             return ((await this.itemProviders
                 .GetValueAsync())
                 .Select(provider => NavigateToItemsSource.Create(this.joinableTaskContext, provider)));
@@ -46,6 +51,11 @@
 
         private IEnumerable<INavigateToItemProvider> CreateItemProviders()
         {
+            if (!this.joinableTaskContext.IsOnMainThread)
+            {
+                throw new InvalidOperationException("Must be created on the UI thread.");
+            }
+
             foreach (var factory in this.itemProviderFactories)
             {
                 if (factory.Value.TryCreateNavigateToItemProvider(

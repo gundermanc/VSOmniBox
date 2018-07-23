@@ -59,7 +59,8 @@
     <Compile Include="Commands\EditorCommandTarget.cs" />
     <Compile Include="Commands\ShellCommandTarget.cs" />
     <Compile Include="Commands\TextViewCreationListener.cs" />
-    <Compile Include="Data\ItemsUpdatedArgs.cs" />
+    <Compile Include="Data\IOmniBoxItemsSourceProviderMetadata.cs" />
+    <Compile Include="Data\SearchDataModelUpdatedArgs.cs" />
     <Compile Include="Data\SearchDataModel.cs" />
     <Compile Include="Data\SearchProviderTask.cs" />
     <Compile Include="Data\SearchTask.cs" />
