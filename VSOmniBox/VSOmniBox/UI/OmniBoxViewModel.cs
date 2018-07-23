@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.ComponentModel;
     using System.Linq;
     using System.Windows.Input;
@@ -16,7 +17,8 @@
 
         private string searchString = string.Empty;
         private int selectedItemIndex = -1;
-        private SearchDataModel searchDataModel = SearchDataModel.Empty;
+        private SearchDataModel searchDataModel;
+        private IReadOnlyList<OmniBoxItem> searchResults;
 
         public OmniBoxViewModel(IOmniBoxUIService broker)
         {
@@ -86,8 +88,19 @@
             }
         }
 
-        // TODO: make reference data model directly.
-        public IReadOnlyList<OmniBoxItem> SearchResults { get; private set; }
+        public IReadOnlyList<OmniBoxItem> SearchResults
+        {
+            get => this.searchResults;
+            private set
+            {
+                if (this.SearchResults != value)
+                {
+                    this.searchResults = value ?? throw new ArgumentNullException(nameof(value));
+
+                    this.NotifyPropertyChanged(nameof(this.SearchResults));
+                }
+            }
+        }
 
         #endregion
 
@@ -96,17 +109,35 @@
         public bool IsValidSelectionIndex(int value)
             => (value >= -1) && (value < this.SearchResults.Count);
 
-        public void UpdateSearchDataModel(SearchDataModel dataModel)
+        public void UpdateFromSearchDataModel(SearchDataModel searchDataModel)
         {
             const int MaxResultsPerPivot = 3;
-            // TODO: use searchDataModel for results list instead of copying.
-            this.searchDataModel = dataModel;
-            this.SearchResults = this.searchDataModel.CodeItems.Take(MaxResultsPerPivot)
-                .Concat(this.searchDataModel.IDEItems.Take(MaxResultsPerPivot)).ToList();
-            this.NotifyPropertyChanged(nameof(this.SearchResults));
 
-            // Select first item, if there is one.
-            this.SelectedItemIndex = this.SearchResults.Count > 0 ? 0 : -1;
+            this.searchDataModel = searchDataModel;
+
+            var resultsListBuilder = ImmutableArray.CreateBuilder<OmniBoxItem>();
+
+            if (searchDataModel.CodeItems.Length > 0)
+            {
+                resultsListBuilder.Add(
+                    new OmniBoxPivotItem(
+                        Strings.CodePivotItemTitle,
+                        description: string.Empty,
+                        action: () => UpdateFromPivot(OmniBoxPivot.Code)));
+                resultsListBuilder.AddRange(searchDataModel.CodeItems.Take(MaxResultsPerPivot));
+            }
+
+            if (searchDataModel.IDEItems.Length > 0)
+            {
+                resultsListBuilder.Add(
+                    new OmniBoxPivotItem(
+                        Strings.IDEPivotItemTitle,
+                        description: string.Empty,
+                        action: () => UpdateFromPivot(OmniBoxPivot.IDE)));
+                resultsListBuilder.AddRange(searchDataModel.IDEItems.Take(MaxResultsPerPivot));
+            }
+
+            this.SearchResults = resultsListBuilder.ToImmutable();
         }
 
         #endregion
@@ -115,6 +146,19 @@
 
         private void NotifyPropertyChanged(string paramName)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(paramName));
+
+        private void UpdateFromPivot(OmniBoxPivot pivot)
+        {
+            switch (pivot)
+            {
+                case OmniBoxPivot.Code:
+                    this.SearchResults = this.searchDataModel.CodeItems;
+                    break;
+                case OmniBoxPivot.IDE:
+                    this.SearchResults = this.searchDataModel.IDEItems;
+                    break;
+            }
+        }
 
         #endregion
     }

@@ -64,6 +64,11 @@
     <Compile Include="Data\SearchDataModel.cs" />
     <Compile Include="Data\SearchProviderTask.cs" />
     <Compile Include="Data\SearchTask.cs" />
+    <Compile Include="Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
     <Compile Include="UI\IInvokable.cs" />
     <Compile Include="UI\OmniBoxBroker.cs" />
     <Compile Include="Data\SearchController.cs" />
@@ -71,6 +76,7 @@
     <Compile Include="UI\Commands\DownCommand.cs" />
     <Compile Include="UI\Commands\InvokeCommand.cs" />
     <Compile Include="UI\Commands\UpCommand.cs" />
+    <Compile Include="UI\OmniBoxPivotItem.cs" />
     <Compile Include="UI\OmniBoxView.xaml.cs">
       <DependentUpon>OmniBoxView.xaml</DependentUpon>
     </Compile>
@@ -223,6 +229,10 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
