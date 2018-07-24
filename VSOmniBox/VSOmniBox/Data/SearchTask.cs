@@ -17,6 +17,8 @@
 
         public static SearchTask Create() => new SearchTask();
 
+        public CancellationToken CancellationToken => this.cancellationTokenSource.Token;
+
         public bool IsDisposed { get; private set; }
 
         public async Task<SearchDataModel> SearchAsync(
@@ -73,7 +75,7 @@
 
         private void CheckCanceled()
         {
-            if (this.IsDisposed || this.cancellationTokenSource.IsCancellationRequested)
+            if (this.IsDisposed || this.CancellationToken.IsCancellationRequested)
             {
                 throw new OperationCanceledException();
             }
@@ -87,18 +89,21 @@
             var searchProviderTasks = itemsSources.Select(
                 itemsSource => new SearchProviderTask(
                     itemsSource,
-                    this.cancellationTokenSource.Token)).ToList();
+                    this.CancellationToken)).ToList();
+
+            this.CheckCanceled();
 
             // Wait for results from all providers from parallel computations on background thread.
             var providerResultsLists = await Task.WhenAll(
                 searchProviderTasks.Select(
-                    searchProviderTask => Task.Run(() => searchProviderTask.Search(searchString))));
+                    searchProviderTask => Task.Run(() => searchProviderTask.Search(searchString), this.CancellationToken)));
 
             this.CheckCanceled();
 
             // Sort and filter on background thread.
             return await Task.Run(
-                () => FlattenSortAndFilterLists(patternMatcherFactory, providerResultsLists, searchString));
+                () => FlattenSortAndFilterLists(patternMatcherFactory, providerResultsLists, searchString),
+                this.CancellationToken);
         }
 
         private static ImmutableArray<OmniBoxItem> FlattenSortAndFilterLists(

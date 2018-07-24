@@ -16,6 +16,8 @@
         private readonly JoinableTaskContext joinableTaskContext;
         private readonly Lazy<IPatternMatcherFactory> patternMatcherFactory;
         private AsyncLazy<ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)>> itemsSources;
+
+        // Should only be accessed from UI thread.
         private SearchTask currentSearch;
 
         [ImportingConstructor]
@@ -40,6 +42,11 @@
         // Assumed to be called from only UI thread.
         public void StartOrUpdateSearch(string searchString)
         {
+            if (!this.joinableTaskContext.IsOnMainThread)
+            {
+                throw new InvalidOperationException("Must happen on non-UI thread");
+            }
+
             this.StopSearch();
 
             // Search text is blank. Skip search and update with empty model.
@@ -63,10 +70,17 @@
         // Assumed to be called from only UI thread.
         public void StopSearch()
         {
-            if (this.currentSearch != null)
+            if (!this.joinableTaskContext.IsOnMainThread)
             {
-                this.currentSearch.Dispose();
-                this.currentSearch = null;
+                throw new InvalidOperationException("Must happen on non-UI thread");
+            }
+
+            var currentSearch = this.currentSearch;
+            this.currentSearch = null;
+
+            if (currentSearch != null)
+            {
+                currentSearch.Dispose();
             }
         }
 
@@ -83,20 +97,31 @@
             ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)> sources,
             string searchString)
         {
+            if (!this.joinableTaskContext.IsOnMainThread)
+            {
+                throw new InvalidOperationException("Must happen on non-UI thread");
+            }
+
             // Do the search, if and only if the search hasn't been canceled and we aren't preempted by another task.
-            if ((this.currentSearch != null) && (this.currentSearch == searchTask) && !searchTask.IsDisposed)
+            if (!searchTask.IsDisposed && (this.currentSearch == searchTask))
             {
                 try
                 {
-                    var searchDataModel = await this.currentSearch.SearchAsync(
+                    var searchDataModel = await Task.Run(() => searchTask.SearchAsync(
                         sources,
                         this.patternMatcherFactory.Value,
-                        searchString);
-                    if (!(this.currentSearch?.IsDisposed ?? true))
+                        searchString),
+                        searchTask.CancellationToken);
+
+                    // Raise event for results changed iif we aren't preempted by another task.
+                    if (!searchTask.IsDisposed && (this.currentSearch == searchTask))
                     {
                         this.DataModelUpdated?.Invoke(this, new SearchDataModelUpdatedArgs(searchDataModel));
+
+                        // Search completed, dispose of the search resources.
+                        this.currentSearch.Dispose();
+                        this.currentSearch = null;
                     }
-                    this.currentSearch = null;
                 }
                 catch (OperationCanceledException) { }
             }
@@ -104,6 +129,11 @@
 
         private async Task<ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)>> CreateSourcesAsync()
         {
+            if (!this.joinableTaskContext.IsOnMainThread)
+            {
+                throw new InvalidOperationException("Must happen on non-UI thread");
+            }
+
             var sources = ImmutableArray.CreateBuilder<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)>();
 
             foreach (var provider in this.itemsSourceProviders)
