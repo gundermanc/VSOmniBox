@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Xml;
 using VSOmniBox.API.Data;
 
@@ -9,37 +10,47 @@ namespace VSOmniBox.DefaultProviders.Docs
     {
         public async System.Threading.Tasks.Task GetItemsAsync(string searchString, IOmniBoxSearchSession searchSession)
         {
-            using (var client = new HttpClient())
-            using (var response = await client.GetAsync($"https://docs.microsoft.com/api/search/rss?search={searchString}&locale=en-us", searchSession.))
-            {
-                result = await response.Content.ReadAsStringAsync();
-            }
-
-            WebClient wc = new WebClient();
-            var content = await wc.DownloadStringTaskAsync();
-            if (searchSession.CancellationToken.IsCancellationRequested)
+            if (searchString == null || searchString.Length < 3)
             {
                 return;
             }
-            XmlReader r = XmlReader.Create(new StringReader(content));
-            while (r.Read())
-            {
-                if (r.NodeType == XmlNodeType.Element && r.Name == "item")
-                {
-                    r.ReadToDescendant("title");
-                    var title = r.ReadElementContentAsString("title", "");
-                    r.ReadToNextSibling("description");
-                    var desc = r.ReadElementContentAsString("description", "");
-                    r.ReadToNextSibling("link");
-                    var link = r.ReadElementContentAsString("link", "");
-                    if (searchSession.CancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
 
-                    searchSession.AddItem(new DocOmniBoxItem(title, desc, link));
+            try
+            {
+
+                string result;
+                using (var client = new HttpClient())
+                using (var response = await client.GetAsync($"https://docs.microsoft.com/api/search/rss?search={searchString}&locale=en-us", searchSession.CancellationToken))
+                {
+                    result = await response.Content.ReadAsStringAsync();
+                }
+
+                if (searchSession.CancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                XmlReader r = XmlReader.Create(new StringReader(result));
+                while (r.Read())
+                {
+                    if (r.NodeType == XmlNodeType.Element && r.Name == "item")
+                    {
+                        r.ReadToDescendant("title");
+                        var title = r.ReadElementContentAsString("title", "");
+                        r.ReadToNextSibling("description");
+                        var desc = r.ReadElementContentAsString("description", "");
+                        r.ReadToNextSibling("link");
+                        var link = r.ReadElementContentAsString("link", "");
+                        if (searchSession.CancellationToken.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        searchSession.AddItem(new DocOmniBoxItem(title, desc, link));
+                    }
                 }
             }
+            catch { }
 
             return;
         }

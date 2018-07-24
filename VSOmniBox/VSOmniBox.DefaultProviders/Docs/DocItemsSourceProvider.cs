@@ -10,7 +10,7 @@ namespace VSOmniBox.DefaultProviders.Docs
 {
     [Export(typeof(IOmniBoxItemsSourceProvider))]
     [Name(nameof(DocItemsSourceProvider))]
-    [OmniBoxPivot(OmniBoxPivot.Code)]
+    [OmniBoxPivot(OmniBoxPivot.Help)]
     [Order(After = nameof(NavigateToItemsSourceProvider))]
     internal class DocItemsSourceProvider : IOmniBoxItemsSourceProvider
     {

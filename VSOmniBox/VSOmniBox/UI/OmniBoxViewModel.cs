@@ -138,6 +138,17 @@
                 resultsListBuilder.AddRange(searchDataModel.IDEItems.Take(MaxResultsPerPivot));
             }
 
+            if (searchDataModel.HelpItems.Length > 0)
+            {
+                resultsListBuilder.Add(
+                    new OmniBoxPivotItem(
+                        Strings.HelpPivotItemTitle,
+                        description: string.Empty,
+                        action: () => UpdateFromPivot(OmniBoxPivot.Help)));
+                resultsListBuilder.AddRange(searchDataModel.HelpItems.Take(MaxResultsPerPivot));
+            }
+
+
             this.SearchResults = resultsListBuilder.ToImmutable();
         }
 
@@ -173,6 +184,9 @@
                     break;
                 case OmniBoxPivot.IDE:
                     this.SearchResults = this.searchDataModel.IDEItems;
+                    break;
+                case OmniBoxPivot.Help:
+                    this.SearchResults = this.searchDataModel.HelpItems;
                     break;
             }
         }

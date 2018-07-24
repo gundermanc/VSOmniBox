@@ -3,6 +3,7 @@
     public enum OmniBoxPivot
     {
         Code,
-        IDE
+        IDE,
+        Help
     }
 }

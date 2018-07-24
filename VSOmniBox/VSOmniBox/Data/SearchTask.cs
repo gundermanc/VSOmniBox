@@ -43,9 +43,15 @@
                 patternMatcherFactory,
                 searchString);
 
+            var helpResults = await SearchAndSortAndFilterResults(
+                SelectPivotProviders(itemsSources, OmniBoxPivot.Help),
+                patternMatcherFactory,
+                searchString);
+
             return new SearchDataModel(
                 codeItems: codeResults,
-                ideItems: ideResults);
+                ideItems: ideResults,
+                helpItems: helpResults);
         }
 
         public void Dispose()

@@ -19,7 +19,7 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
         private Microsoft.VisualStudio.Shell.IAsyncServiceProvider asyncProvider;
         private ProjectTemplateSearchTask searchTask;
 
-        static uint cookie;
+        static uint cookie = 1;
 
         public NPDTemplateItemsSource(SVsServiceProvider shellServiceProvider)
         {
