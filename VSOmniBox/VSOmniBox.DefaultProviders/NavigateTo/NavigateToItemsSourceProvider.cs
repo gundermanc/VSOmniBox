@@ -12,7 +12,7 @@
     using VSOmniBox.API.Data;
     using VSOmniBox.DefaultProviders.QuickLaunch;
 
-    //[Export(typeof(IOmniBoxItemsSourceProvider))]
+    [Export(typeof(IOmniBoxItemsSourceProvider))]
     [Name(nameof(NavigateToItemsSourceProvider))]
     [OmniBoxPivot(OmniBoxPivot.Code)]
     internal sealed class NavigateToItemsSourceProvider : IOmniBoxItemsSourceProvider
