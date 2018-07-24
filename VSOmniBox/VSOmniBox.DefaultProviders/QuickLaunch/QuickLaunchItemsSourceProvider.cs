@@ -14,6 +14,7 @@
 
     //[Export(typeof(IOmniBoxItemsSourceProvider))]
     [Name(nameof(QuickLaunchItemsSourceProvider))]
+    [OmniBoxPivot(OmniBoxPivot.IDE)]
     [Order(After = nameof(NavigateToItemsSourceProvider))]
     internal sealed class QuickLaunchItemsSourceProvider : IOmniBoxItemsSourceProvider
     {
@@ -29,7 +30,7 @@
             this.shellServiceProvider = shellServiceProvider;
         }
 
-        public Task<IEnumerable<IOmniBoxItemsSource>> CreateSearchProvidersAsync()
+        public Task<IEnumerable<IOmniBoxItemsSource>> CreateItemsSourcesAsync()
         {
             return System.Threading.Tasks.Task.FromResult(this.CreateSources());
         }

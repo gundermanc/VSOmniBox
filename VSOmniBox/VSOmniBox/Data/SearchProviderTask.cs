@@ -10,7 +10,7 @@
     {
         private readonly IOmniBoxItemsSource itemsSource;
         private readonly List<OmniBoxItem> items = new List<OmniBoxItem>();
-        private Thread owningThread;
+        private readonly object listLock = new object();
         private bool started;
 
         public SearchProviderTask(IOmniBoxItemsSource itemsSource, CancellationToken cancellationToken)
@@ -31,21 +31,20 @@
             started = true;
 
             await this.itemsSource.GetItemsAsync(searchString, this);
-            return items;
+
+            // Just in case..
+            lock (this.listLock)
+            {
+                return items;
+            }
         }
 
         public void AddItem(OmniBoxItem item)
         {
-            if (this.owningThread == null)
+            lock (this.listLock)
             {
-                this.owningThread = Thread.CurrentThread;
+                this.items.Add(item);
             }
-            else if (this.owningThread != Thread.CurrentThread)
-            {
-                throw new InvalidOperationException("Cannot add item from this thread. Session claimed by another thread");
-            }
-
-            this.items.Add(item);
         }
     }
 }

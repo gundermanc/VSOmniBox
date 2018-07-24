@@ -20,7 +20,7 @@
         public bool IsDisposed { get; private set; }
 
         public async Task<SearchDataModel> SearchAsync(
-            IEnumerable<IOmniBoxItemsSource> itemsSources,
+            IEnumerable<(IOmniBoxItemsSource source, IOmniBoxItemsSourceProviderMetadata metadata)> itemsSources,
             IPatternMatcherFactory patternMatcherFactory,
             string searchString)
         {
@@ -33,6 +33,51 @@
 
             this.started = true;
 
+            var codeResults = await SearchAndSortAndFilterResults(
+                SelectPivotProviders(itemsSources, OmniBoxPivot.Code),
+                patternMatcherFactory,
+                searchString);
+
+            var ideResults = await SearchAndSortAndFilterResults(
+                SelectPivotProviders(itemsSources, OmniBoxPivot.IDE),
+                patternMatcherFactory,
+                searchString);
+
+            return new SearchDataModel(
+                codeItems: codeResults,
+                ideItems: ideResults);
+        }
+
+        public void Dispose()
+        {
+            if (!this.IsDisposed)
+            {
+                this.IsDisposed = true;
+                this.cancellationTokenSource.Cancel();
+                this.cancellationTokenSource.Dispose();
+            }
+        }
+
+        private IEnumerable<IOmniBoxItemsSource> SelectPivotProviders(
+            IEnumerable<(IOmniBoxItemsSource source, IOmniBoxItemsSourceProviderMetadata metadata)> itemsSources,
+            OmniBoxPivot pivot)
+                => itemsSources
+                .Where(tuple => tuple.metadata.Pivot == pivot)
+                .Select(tuple => tuple.source);
+
+        private void CheckCanceled()
+        {
+            if (this.IsDisposed || this.cancellationTokenSource.IsCancellationRequested)
+            {
+                throw new OperationCanceledException();
+            }
+        }
+
+        private async Task<ImmutableArray<OmniBoxItem>> SearchAndSortAndFilterResults(
+            IEnumerable<IOmniBoxItemsSource> itemsSources,
+            IPatternMatcherFactory patternMatcherFactory,
+            string searchString)
+        {
             var searchProviderTasks = itemsSources.Select(
                 itemsSource => new SearchProviderTask(
                     itemsSource,
@@ -46,28 +91,8 @@
             this.CheckCanceled();
 
             // Sort and filter on background thread.
-            var sortedResults = await Task.Run(
+            return await Task.Run(
                 () => FlattenSortAndFilterLists(patternMatcherFactory, providerResultsLists, searchString));
-
-            return new SearchDataModel(sortedResults);
-        }
-
-        public void Dispose()
-        {
-            if (!this.IsDisposed)
-            {
-                this.IsDisposed = true;
-                this.cancellationTokenSource.Cancel();
-                this.cancellationTokenSource.Dispose();
-            }
-        }
-
-        private void CheckCanceled()
-        {
-            if (this.IsDisposed || this.cancellationTokenSource.IsCancellationRequested)
-            {
-                throw new OperationCanceledException();
-            }
         }
 
         private static ImmutableArray<OmniBoxItem> FlattenSortAndFilterLists(

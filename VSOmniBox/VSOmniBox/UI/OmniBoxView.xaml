@@ -17,11 +17,33 @@
         WindowStyle="None">
     <Window.Resources>
 
+        <!-- Search box item template styles our results list. -->
         <DataTemplate x:Key="SearchBoxDataTemplate">
             <StackPanel>
-                <TextBlock FontSize="18" Text="{Binding Path=Title}" />
-                <TextBlock FontSize="14" Text="{Binding Path=Description}" FontStyle="Italic" Margin="20,0,0,0"/>
+                <TextBlock x:Name="TitleBlock" FontSize="18" Text="{Binding Path=Title}" Margin="20,0,0,0"/>
+                <TextBlock x:Name="DescriptionBlock" FontSize="14" Text="{Binding Path=Description}" FontStyle="Italic" Margin="25,0,0,0" />
             </StackPanel>
+
+            <DataTemplate.Triggers>
+
+                <!-- Null description, hide the description block. -->
+                <DataTrigger Binding="{Binding Description}" Value="">
+                    <Setter TargetName="DescriptionBlock" Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+                
+                <!-- Empty description, hide the description block. -->
+                <DataTrigger Binding="{Binding Description}" Value="{x:Null}">
+                    <Setter TargetName="DescriptionBlock" Property="Visibility" Value="Collapsed" />
+                </DataTrigger>
+
+                <!-- Pivot items are special emphasized results that are used to group items. -->
+                <DataTrigger Binding="{Binding IsPivot}" Value="True">
+                    <Setter TargetName="TitleBlock" Property="Margin" Value="0" />
+                    <Setter TargetName="DescriptionBlock" Property="Visibility" Value="Collapsed" />
+                    <Setter Property="TextBlock.FontSize" Value="20" />
+                    <Setter Property="TextBlock.FontWeight" Value="Bold" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
         </DataTemplate>
 
         <Style x:Key="PopupBorderStyle" TargetType="{x:Type Border}">
@@ -43,6 +65,7 @@
             <!-- TODO: use something other than the text brush here. -->
             <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
             <Setter Property="Focusable" Value="False" />
+            <Setter Property="ItemTemplate" Value="{StaticResource SearchBoxDataTemplate}" />
             <Setter Property="Margin" Value="5" />
             <Setter Property="Margin" Value="5,0,5,5" />
             <Setter Property="MaxHeight" Value="200" />
@@ -77,7 +100,6 @@
                 <ListBox x:Name="ResultsBox"
                          DockPanel.Dock="Bottom"
                          ItemsSource="{Binding SearchResults}"
-                         ItemTemplate="{StaticResource SearchBoxDataTemplate}"
                          SelectedIndex="{Binding SelectedItemIndex}" />
             </DockPanel>
         </Border>

@@ -5,11 +5,16 @@
 
     internal sealed class SearchDataModel
     {
-        public SearchDataModel(ImmutableArray<OmniBoxItem> items)
+        public static readonly SearchDataModel Empty = new SearchDataModel(ImmutableArray<OmniBoxItem>.Empty, ImmutableArray<OmniBoxItem>.Empty);
+
+        public SearchDataModel(ImmutableArray<OmniBoxItem> codeItems, ImmutableArray<OmniBoxItem> ideItems)
         {
-            this.Items = items;
+            this.CodeItems = codeItems;
+            this.IDEItems = ideItems;
         }
 
-        public ImmutableArray<OmniBoxItem> Items { get; } = ImmutableArray<OmniBoxItem>.Empty;
+        public ImmutableArray<OmniBoxItem> CodeItems { get; }
+
+        public ImmutableArray<OmniBoxItem> IDEItems { get; }
     }
 }

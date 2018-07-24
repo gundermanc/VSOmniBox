@@ -40,6 +40,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\OmniBoxPivot.cs" />
+    <Compile Include="Data\OmniBoxPivotAttribute.cs" />
     <Compile Include="UI\IOmniBoxUIService.cs" />
     <Compile Include="Data\OmniBoxItem.cs" />
     <Compile Include="Data\IOmniBoxSearchSession.cs" />

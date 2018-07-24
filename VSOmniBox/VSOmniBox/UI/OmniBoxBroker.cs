@@ -91,7 +91,7 @@
             }
         }
 
-        private void OnDataModelUpdated(object sender, ItemsUpdatedArgs e) => this.model.UpdateSearchDataModel(e.Model);
+        private void OnDataModelUpdated(object sender, SearchDataModelUpdatedArgs e) => this.model.UpdateFromSearchDataModel(e.Model);
 
         private void DestroyView()
         {

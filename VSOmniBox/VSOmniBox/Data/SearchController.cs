@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.ComponentModel.Composition;
-    using System.Globalization;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.Text.PatternMatching;
     using Microsoft.VisualStudio.Threading;
@@ -13,15 +12,15 @@
     [Export]
     internal sealed class SearchController
     {
-        private readonly IEnumerable<Lazy<IOmniBoxItemsSourceProvider>> itemsSourceProviders;
+        private readonly IEnumerable<Lazy<IOmniBoxItemsSourceProvider, IOmniBoxItemsSourceProviderMetadata>> itemsSourceProviders;
         private readonly JoinableTaskContext joinableTaskContext;
         private readonly Lazy<IPatternMatcherFactory> patternMatcherFactory;
-        private AsyncLazy<IReadOnlyList<IOmniBoxItemsSource>> itemsSources;
+        private AsyncLazy<ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)>> itemsSources;
         private SearchTask currentSearch;
 
         [ImportingConstructor]
         public SearchController(
-            [ImportMany]IEnumerable<Lazy<IOmniBoxItemsSourceProvider>> itemsSourceProviders,
+            [ImportMany]IEnumerable<Lazy<IOmniBoxItemsSourceProvider, IOmniBoxItemsSourceProviderMetadata>> itemsSourceProviders,
             JoinableTaskContext joinableTaskContext,
             Lazy<IPatternMatcherFactory> patternMatcherFactory)
         {
@@ -32,11 +31,11 @@
             this.patternMatcherFactory = patternMatcherFactory
                 ?? throw new ArgumentNullException(nameof(patternMatcherFactory));
 
-            this.itemsSources = new AsyncLazy<IReadOnlyList<IOmniBoxItemsSource>>(
+            this.itemsSources = new AsyncLazy<ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)>>(
                 () => this.CreateSourcesAsync(), joinableTaskContext.Factory);
         }
 
-        public event EventHandler<ItemsUpdatedArgs> DataModelUpdated;
+        public event EventHandler<SearchDataModelUpdatedArgs> DataModelUpdated;
 
         // Assumed to be called from only UI thread.
         public void StartOrUpdateSearch(string searchString)
@@ -48,7 +47,7 @@
             {
                 this.DataModelUpdated?.Invoke(
                     this,
-                    new ItemsUpdatedArgs(new SearchDataModel(ImmutableArray<OmniBoxItem>.Empty)));
+                    new SearchDataModelUpdatedArgs(SearchDataModel.Empty));
                 return;
             }
 
@@ -79,17 +78,23 @@
             });
         }
 
-        private async Task PerformSearch(SearchTask searchTask, IReadOnlyList<IOmniBoxItemsSource> sources, string searchString)
+        private async Task PerformSearch(
+            SearchTask searchTask,
+            ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)> sources,
+            string searchString)
         {
             // Do the search, if and only if the search hasn't been canceled and we aren't preempted by another task.
             if ((this.currentSearch != null) && (this.currentSearch == searchTask) && !searchTask.IsDisposed)
             {
                 try
                 {
-                    var searchDataModel = await this.currentSearch.SearchAsync(sources, this.patternMatcherFactory.Value, searchString);
+                    var searchDataModel = await this.currentSearch.SearchAsync(
+                        sources,
+                        this.patternMatcherFactory.Value,
+                        searchString);
                     if (!(this.currentSearch?.IsDisposed ?? true))
                     {
-                        this.DataModelUpdated?.Invoke(this, new ItemsUpdatedArgs(searchDataModel));
+                        this.DataModelUpdated?.Invoke(this, new SearchDataModelUpdatedArgs(searchDataModel));
                     }
                     this.currentSearch = null;
                 }
@@ -97,17 +102,19 @@
             }
         }
 
-        private async Task<IReadOnlyList<IOmniBoxItemsSource>> CreateSourcesAsync()
+        private async Task<ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)>> CreateSourcesAsync()
         {
-            var sources = new List<IOmniBoxItemsSource>();
+            var sources = ImmutableArray.CreateBuilder<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)>();
 
-            // Create sources.
             foreach (var provider in this.itemsSourceProviders)
             {
-                sources.AddRange(await provider.Value.CreateSearchProvidersAsync());
+                foreach (var source in await provider.Value.CreateItemsSourcesAsync())
+                {
+                    sources.Add((source, provider.Metadata));
+                }
             }
 
-            return sources;
+            return sources.ToImmutable();
         }
     }
 }
