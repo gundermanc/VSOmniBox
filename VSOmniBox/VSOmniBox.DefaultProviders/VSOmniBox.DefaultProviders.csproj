@@ -135,6 +135,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Docs\DocItemsSource.cs" />
+    <Compile Include="Docs\DocItemsSourceProvider.cs" />
+    <Compile Include="Docs\DocOmniBoxItem.cs" />
     <Compile Include="NavigateTo\NavigateToCallbackShim.cs" />
     <Compile Include="NavigateTo\NavigateToItemShim.cs" />
     <Compile Include="NavigateTo\NavigateToOptions.cs" />

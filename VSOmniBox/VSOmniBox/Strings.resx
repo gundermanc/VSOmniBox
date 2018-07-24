@@ -123,4 +123,7 @@
   <data name="IDEPivotItemTitle" xml:space="preserve">
     <value>IDE Results (click for more)</value>
   </data>
+  <data name="HelpPivotItemTitle" xml:space="preserve">
+    <value>Help Results (click for more)</value>
+  </data>
 </root>

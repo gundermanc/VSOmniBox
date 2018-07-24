@@ -70,6 +70,15 @@ namespace VSOmniBox {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Help Results (click for more).
+        /// </summary>
+        internal static string HelpPivotItemTitle {
+            get {
+                return ResourceManager.GetString("HelpPivotItemTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IDE Results (click for more).
         /// </summary>
         internal static string IDEPivotItemTitle {
