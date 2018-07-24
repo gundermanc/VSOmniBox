@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.CoreUtility.15.6.27740\lib\net46\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
     </Reference>
@@ -117,6 +120,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Docs\DocItemsSource.cs" />
+    <Compile Include="Docs\DocItemsSourceProvider.cs" />
+    <Compile Include="Docs\DocOmniBoxItem.cs" />
     <Compile Include="NavigateTo\NavigateToCallbackShim.cs" />
     <Compile Include="NavigateTo\NavigateToItemShim.cs" />
     <Compile Include="NavigateTo\NavigateToOptions.cs" />
