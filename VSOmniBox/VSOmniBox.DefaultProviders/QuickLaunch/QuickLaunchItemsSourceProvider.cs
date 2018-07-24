@@ -12,7 +12,7 @@
     using VSOmniBox.API.Data;
     using VSOmniBox.DefaultProviders.NavigateTo;
 
-    [Export(typeof(IOmniBoxItemsSourceProvider))]
+    //[Export(typeof(IOmniBoxItemsSourceProvider))]
     [Name(nameof(QuickLaunchItemsSourceProvider))]
     [Order(After = nameof(NavigateToItemsSourceProvider))]
     internal sealed class QuickLaunchItemsSourceProvider : IOmniBoxItemsSourceProvider
