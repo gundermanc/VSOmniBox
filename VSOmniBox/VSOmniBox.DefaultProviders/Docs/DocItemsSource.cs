@@ -9,8 +9,14 @@ namespace VSOmniBox.DefaultProviders.Docs
     {
         public async System.Threading.Tasks.Task GetItemsAsync(string searchString, IOmniBoxSearchSession searchSession)
         {
+            using (var client = new HttpClient())
+            using (var response = await client.GetAsync($"https://docs.microsoft.com/api/search/rss?search={searchString}&locale=en-us", searchSession.))
+            {
+                result = await response.Content.ReadAsStringAsync();
+            }
+
             WebClient wc = new WebClient();
-            var content = await wc.DownloadStringTaskAsync($"https://docs.microsoft.com/api/search/rss?search={searchString}&locale=en-us");
+            var content = await wc.DownloadStringTaskAsync();
             if (searchSession.CancellationToken.IsCancellationRequested)
             {
                 return;

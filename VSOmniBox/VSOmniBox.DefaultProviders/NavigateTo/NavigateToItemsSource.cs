@@ -24,8 +24,6 @@
             string searchString,
             IOmniBoxSearchSession searchCallback)
         {
-            await this.joinableTaskContext.Factory.SwitchToMainThreadAsync();
-
             searchCallback.CancellationToken.ThrowIfCancellationRequested();
 
             var callbackShim = new NavigateToCallbackShim(searchCallback);

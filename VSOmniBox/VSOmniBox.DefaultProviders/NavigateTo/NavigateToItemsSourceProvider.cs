@@ -58,7 +58,10 @@
 
             foreach (var factory in this.itemProviderFactories)
             {
-                if (factory.Value.TryCreateNavigateToItemProvider(
+                // TODO: the file name provider currently breaks search because it fails to report search completion.
+                // Turning it off until we figure out what's wrong.
+                if (factory.Value.GetType().FullName != "Microsoft.VisualStudio.Language.NavigateTo.FileNameProvider.NavigateToItemProviderFactory" &&
+                    factory.Value.TryCreateNavigateToItemProvider(
                     this.shellServiceProvider,
                     out var provider))
                 {
