@@ -22,5 +22,13 @@
                 invokable.InvokeCommand.Execute(parameter: null);
             }
         }
+
+        private void SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.ResultsBox.SelectedItems.Count == 1)
+            {
+                this.ResultsBox.ScrollIntoView(this.ResultsBox.SelectedItem);
+            }
+        }
     }
 }

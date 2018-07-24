@@ -100,6 +100,7 @@
                 <ListBox x:Name="ResultsBox"
                          DockPanel.Dock="Bottom"
                          ItemsSource="{Binding SearchResults}"
+                         SelectionChanged="SelectionChanged"
                          SelectedIndex="{Binding SelectedItemIndex}" />
             </DockPanel>
         </Border>
