@@ -17,22 +17,20 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
 {
     [Export(typeof(IOmniBoxItemsSourceProvider))]
     [Name(nameof(NPDTemplateItemsSourceProvider))]
+    [OmniBoxPivot(OmniBoxPivot.IDE)]
     [Order(Before = nameof(QuickLaunchItemsSourceProvider))]
     internal sealed class NPDTemplateItemsSourceProvider : IOmniBoxItemsSourceProvider
     {
         private readonly SVsServiceProvider shellServiceProvider;
-        private readonly JoinableTaskContext joinableTaskContext;
 
         [ImportingConstructor]
         public NPDTemplateItemsSourceProvider(
-            SVsServiceProvider shellServiceProvider,
-            JoinableTaskContext joinableTaskContext)
+            SVsServiceProvider shellServiceProvider)
         {
             this.shellServiceProvider = shellServiceProvider;
-            this.joinableTaskContext = joinableTaskContext;
         }
 
-        public Task<IEnumerable<IOmniBoxItemsSource>> CreateSearchProvidersAsync()
+        public Task<IEnumerable<IOmniBoxItemsSource>> CreateItemsSourcesAsync()
         {
             return System.Threading.Tasks.Task.FromResult(this.CreateSources());
         }

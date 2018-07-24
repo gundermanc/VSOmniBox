@@ -26,7 +26,7 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
             this.installedTemplateProvider = installedTemplateProvider;
         }
 
-        public override string Title => template.Name;
+        public override string Title => "Create Project -> " + template.DefaultName;
 
         public override string Description => template.Description;
 

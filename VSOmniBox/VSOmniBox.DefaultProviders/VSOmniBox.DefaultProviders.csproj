@@ -140,7 +140,7 @@
     <Compile Include="NavigateTo\NavigateToOptions.cs" />
     <Compile Include="NavigateTo\NavigateToItemsSource.cs" />
     <Compile Include="NavigateTo\NavigateToItemsSourceProvider.cs" />
-    <Compile Include="NPDTemplate\NewProjectSearchTask.cs" />
+    <Compile Include="NPDTemplate\ProjectTemplateSearchTask.cs" />
     <Compile Include="NPDTemplate\NPDTemplateItemsSource.cs" />
     <Compile Include="NPDTemplate\NPDTemplateItemsSourceProvider.cs" />
     <Compile Include="NPDTemplate\NPDTemplateSearchCallbackShim.cs" />

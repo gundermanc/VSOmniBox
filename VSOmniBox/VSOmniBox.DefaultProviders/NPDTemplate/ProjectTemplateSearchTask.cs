@@ -11,34 +11,19 @@ using IAsyncServiceProvider = Microsoft.VisualStudio.Shell.IAsyncServiceProvider
 
 namespace VSOmniBox.DefaultProviders.NPDTemplate
 {
-    internal class NewProjectSearchTask : VsSearchTask
+    internal class ProjectTemplateSearchTask : VsSearchTask
     {
-        private readonly IAsyncServiceProvider _asyncServiceProvider;
+        private readonly IAsyncServiceProvider asyncServiceProvider;
         private IVsTemplateProvider installedTemplateProvider;
         public List<OmniBoxItem> results = new List<OmniBoxItem>();
 
-        public NewProjectSearchTask(uint dwCookie, IVsSearchQuery pSearchQuery, IVsSearchProviderCallback pSearchCallback, IAsyncServiceProvider asyncServiceProvider)
-            : base(dwCookie, pSearchQuery, pSearchCallback)
+        public ProjectTemplateSearchTask(uint dwCookie, IVsSearchQuery pSearchQuery, IVsSearchProviderCallback searchCallback, IAsyncServiceProvider asyncServiceProvider)
+            : base(dwCookie, pSearchQuery, searchCallback)
         {
             Validate.IsNotNull(asyncServiceProvider, nameof(asyncServiceProvider));
 
-            _asyncServiceProvider = asyncServiceProvider;
+            this.asyncServiceProvider = asyncServiceProvider;
         }
-
-        /// <summary>
-        /// Event that indicates a search was started
-        /// </summary>
-        public event EventHandler<EventArgs> SearchStarted;
-
-        /// <summary>
-        /// Event that indicates that a search result is available
-        /// </summary>
-        public event EventHandler<NewProjectSearchEventArgs> SearchResultAvailable;
-
-        /// <summary>
-        /// Event that indicates that a search was completed
-        /// </summary>
-        public event EventHandler<EventArgs> SearchComplete;
 
         /// <summary>
         /// Method that is called when a search is started
@@ -53,11 +38,11 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
                 {
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                    SearchStarted?.Invoke(this, EventArgs.Empty);
+                    //SearchStarted?.Invoke(this, EventArgs.Empty);
 
                     if (installedTemplateProvider == null)
                     {
-                        IVsTemplateProviderFactory templateProviderFactory = await _asyncServiceProvider.GetServiceAsync(typeof(Microsoft.Internal.VisualStudio.Shell.Interop.SVsDialogService)) as IVsTemplateProviderFactory;
+                        IVsTemplateProviderFactory templateProviderFactory = await asyncServiceProvider.GetServiceAsync(typeof(Microsoft.Internal.VisualStudio.Shell.Interop.SVsDialogService)) as IVsTemplateProviderFactory;
                         if (templateProviderFactory == null)
                         {
                             throw new Exception("Unable to get template provider factory");
@@ -84,7 +69,7 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
                     }
 
                     // Notify listeners that the search is now complete
-                    SearchComplete?.Invoke(this, EventArgs.Empty);
+                    //SearchComplete?.Invoke(this, EventArgs.Empty);
 
                     // Also notify the search infrastructure that the search is complete
                     SearchCallback.ReportComplete(this, SearchResults);
@@ -96,15 +81,5 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
         }
 
         
-    }
-
-    internal class NewProjectSearchEventArgs : EventArgs
-    {
-        public NewProjectSearchEventArgs(OmniBoxItem searchResult)
-        {
-            SearchResult = searchResult;
-        }
-
-        public OmniBoxItem SearchResult { get; }
     }
 }

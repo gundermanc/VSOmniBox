@@ -17,7 +17,7 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
     internal class NPDTemplateItemsSource : IOmniBoxItemsSource
     {
         private Microsoft.VisualStudio.Shell.IAsyncServiceProvider asyncProvider;
-        private NewProjectSearchTask searchTask;
+        private ProjectTemplateSearchTask searchTask;
 
         static uint cookie;
 
@@ -36,7 +36,7 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
 
             var callbackShim = new NPDTemplateSearchCallbackShim(searchSession);
 
-            this.searchTask = new NewProjectSearchTask(cookie++, new SearchQueryShim(searchString), callbackShim, this.asyncProvider);
+            this.searchTask = new ProjectTemplateSearchTask(cookie++, new SearchQueryShim(searchString), callbackShim, this.asyncProvider);
             this.searchTask.Start();
 
             return callbackShim.Task;

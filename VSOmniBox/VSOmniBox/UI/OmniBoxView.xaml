@@ -21,7 +21,7 @@
         <DataTemplate x:Key="SearchBoxDataTemplate">
             <StackPanel>
                 <TextBlock x:Name="TitleBlock" FontSize="18" Text="{Binding Path=Title}" Margin="20,0,0,0"/>
-                <TextBlock x:Name="DescriptionBlock" FontSize="14" Text="{Binding Path=Description}" FontStyle="Italic" Margin="25,0,0,0" />
+                <TextBlock x:Name="DescriptionBlock" FontSize="14" Text="{Binding Path=Description}" FontStyle="Italic" Margin="25,0,0,0" ToolTip="{Binding Path=Description}"/>
             </StackPanel>
 
             <DataTemplate.Triggers>

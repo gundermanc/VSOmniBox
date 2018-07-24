@@ -35,7 +35,7 @@
         {
             if (dwResultsFound == 0) return;
             
-                NewProjectSearchTask t = pTask as NewProjectSearchTask;
+                ProjectTemplateSearchTask t = pTask as ProjectTemplateSearchTask;
 
                 foreach(var item in t.results)
                 {
