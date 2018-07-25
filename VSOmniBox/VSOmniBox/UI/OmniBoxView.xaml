@@ -33,16 +33,14 @@
                                     BorderBrush="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBorderBrushKey}}"
                                     Background="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBackgroundBrushKey}}">
                                 <ContentPresenter x:Name="ContentSite"
-                                 
-                                    VerticalAlignment="Center"
-                              ContentSource="Header"
-                              Margin="12,2,12,2"
-                              RecognizesAccessKey="True" />
+                                                  VerticalAlignment="Center"
+                                                  ContentSource="Header"
+                                                  Margin="12,2,12,2"
+                                                  RecognizesAccessKey="True" />
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected"
-                   Value="True">
+                            <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Foreground"
                                            Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxTextBrushKey}}" />
                                 <Setter Property="BorderBrush"
@@ -85,14 +83,11 @@
 
         <Style x:Key="PopupBorderStyle" TargetType="{x:Type Border}">
             <Setter Property="BorderThickness" Value="0.0" />
-            <!-- TODO: use something other than the text brush here. -->
             <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.ComboBoxBorderBrushKey}}" />
             <Setter Property="Background" Value="{DynamicResource {x:Static  vs_shell:CommonControlsColors.ComboBoxBackgroundBrushKey}}" />
-            <!--<Setter Property="CornerRadius" Value="5" />-->
         </Style>
 
         <Style TargetType="{x:Type TextBox}">
-            <!-- TODO: use something other than the text brush here. -->
             <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBorderBrushKey}}" />
             <Setter Property="Background" Value="{DynamicResource {x:Static  vs_shell:CommonControlsColors.TextBoxBackgroundBrushKey}}" />
             <Setter Property="Foreground" Value="{DynamicResource {x:Static  vs_shell:CommonControlsColors.TextBoxTextBrushKey}}" />
@@ -102,7 +97,6 @@
         </Style>
 
         <Style TargetType="{x:Type ListBox}">
-            <!-- TODO: use something other than the text brush here. -->
             <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
             <Setter Property="Focusable" Value="False" />
             <Setter Property="ItemTemplate" Value="{StaticResource SearchBoxDataTemplate}" />
@@ -133,10 +127,11 @@
             <TabItem x:Name="ContextMenuHeader" Header="Omnibox Search" FontSize="20">
                 <Border Style="{StaticResource PopupBorderStyle}">
                     <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
-                        <DockPanel LastChildFill="True"  DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
+                        <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
                             <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
-                            <TextBox Name="SearchTextBox"  DockPanel.Dock="Right" 
-                         Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
+                            <TextBox Name="SearchTextBox"
+                                     DockPanel.Dock="Right"
+                                     Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
                                 <TextBox.InputBindings>
                                     <KeyBinding Command="{Binding DownCommand}" Key="Down" />
                                     <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
@@ -146,10 +141,10 @@
                             </TextBox>
                         </DockPanel>
                         <ListBox x:Name="ResultsBox"
-                         DockPanel.Dock="Bottom"
-                         ItemsSource="{Binding SearchResults}"
-                         SelectionChanged="SelectionChanged"
-                         SelectedIndex="{Binding SelectedItemIndex}" />
+                                 DockPanel.Dock="Bottom"
+                                 ItemsSource="{Binding SearchResults}"
+                                 SelectionChanged="SelectionChanged"
+                                 SelectedIndex="{Binding SelectedItemIndex}" />
                     </DockPanel>
                 </Border>
             </TabItem>
