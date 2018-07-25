@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Linq;
     using System.Windows.Input;
     using VSOmniBox.API.Data;
@@ -130,6 +131,30 @@
             const int MaxResultsPerPivot = 3;
 
             this.searchDataModel = searchDataModel;
+
+            // Show the full list if only one pivot selected.
+            if ((this.Pivot.HasFlag(OmniBoxPivot.Code) && !this.Pivot.HasFlag(OmniBoxPivot.IDE) && !this.Pivot.HasFlag(OmniBoxPivot.Help)) ||
+                (!this.Pivot.HasFlag(OmniBoxPivot.Code) && this.Pivot.HasFlag(OmniBoxPivot.IDE) && !this.Pivot.HasFlag(OmniBoxPivot.Help)) ||
+                (!this.Pivot.HasFlag(OmniBoxPivot.Code) && !this.Pivot.HasFlag(OmniBoxPivot.IDE) && this.Pivot.HasFlag(OmniBoxPivot.Help)))
+            {
+                switch (this.Pivot)
+                {
+                    case OmniBoxPivot.Code:
+                        this.SearchResults = searchDataModel.CodeItems;
+                        break;
+                    case OmniBoxPivot.IDE:
+                        this.SearchResults = searchDataModel.IDEItems;
+                        break;
+                    case OmniBoxPivot.Help:
+                        this.SearchResults = searchDataModel.HelpItems;
+                        break;
+                    default:
+                        Debug.Fail("Unknown case");
+                        break;
+                }
+
+                return;
+            }
 
             var resultsListBuilder = ImmutableArray.CreateBuilder<OmniBoxItem>();
 
