@@ -40,7 +40,7 @@
         public event EventHandler<SearchDataModelUpdatedArgs> DataModelUpdated;
 
         // Assumed to be called from only UI thread.
-        public void StartOrUpdateSearch(string searchString)
+        public void StartOrUpdateSearch(string searchString, OmniBoxPivot pivot)
         {
             if (!this.joinableTaskContext.IsOnMainThread)
             {
@@ -63,7 +63,7 @@
             this.joinableTaskContext.Factory.RunAsync(async delegate
             {
                 var sources = await this.itemsSources.GetValueAsync();
-                await this.PerformSearch(this.currentSearch, sources, searchString);
+                await this.PerformSearch(this.currentSearch, sources, searchString, pivot);
             });
         }
 
@@ -95,7 +95,8 @@
         private async Task PerformSearch(
             SearchTask searchTask,
             ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)> sources,
-            string searchString)
+            string searchString,
+            OmniBoxPivot pivot)
         {
             if (!this.joinableTaskContext.IsOnMainThread)
             {
@@ -107,10 +108,12 @@
             {
                 try
                 {
-                    var searchDataModel = await Task.Run(() => searchTask.SearchAsync(
-                        sources,
-                        this.patternMatcherFactory.Value,
-                        searchString),
+                    var searchDataModel = await Task.Run(
+                        () => searchTask.SearchAsync(
+                            sources,
+                            this.patternMatcherFactory.Value,
+                            searchString,
+                            pivot),
                         searchTask.CancellationToken);
 
                     // Raise event for results changed iif we aren't preempted by another task.

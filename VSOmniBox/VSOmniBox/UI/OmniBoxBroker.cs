@@ -85,9 +85,9 @@
 
         private void OnViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(OmniBoxViewModel.SearchString))
+            if (e.PropertyName == nameof(OmniBoxViewModel.SearchString) || e.PropertyName == nameof(OmniBoxViewModel.Pivot))
             {
-                this.searchController.StartOrUpdateSearch(this.model.SearchString);
+                this.searchController.StartOrUpdateSearch(this.model.SearchString, this.model.Pivot);
             }
         }
 

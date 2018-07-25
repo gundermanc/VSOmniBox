@@ -24,7 +24,8 @@
         public async Task<SearchDataModel> SearchAsync(
             IEnumerable<(IOmniBoxItemsSource source, IOmniBoxItemsSourceProviderMetadata metadata)> itemsSources,
             IPatternMatcherFactory patternMatcherFactory,
-            string searchString)
+            string searchString,
+            OmniBoxPivot pivot)
         {
             if (this.started)
             {
@@ -35,31 +36,43 @@
 
             this.started = true;
 
-            var codeTask = Task.Run(() => SearchAndSortAndFilterResultsAsync(
-                SelectPivotProviders(itemsSources, OmniBoxPivot.Code),
-                patternMatcherFactory,
-                searchString),
-                this.CancellationToken);
+            var searchTasks = new List<Task<ImmutableArray<OmniBoxItem>>>();
 
-            var ideTask = Task.Run(() => SearchAndSortAndFilterResultsAsync(
-                SelectPivotProviders(itemsSources, OmniBoxPivot.IDE),
-                patternMatcherFactory,
-                searchString),
-                this.CancellationToken);
-
-            var helpTask = Task.Run(() => SearchAndSortAndFilterResultsAsync(
-                SelectPivotProviders(itemsSources, OmniBoxPivot.Help),
-                patternMatcherFactory,
-                searchString),
-                this.CancellationToken);
+            // Start searches in parallel, if requested.
+            this.StartPivotSearch(itemsSources, patternMatcherFactory, searchString, pivot, OmniBoxPivot.Code, searchTasks);
+            this.StartPivotSearch(itemsSources, patternMatcherFactory, searchString, pivot, OmniBoxPivot.IDE, searchTasks);
+            this.StartPivotSearch(itemsSources, patternMatcherFactory, searchString, pivot, OmniBoxPivot.Help, searchTasks);
 
             // Wait for all searches to complete in parallel.
-            await Task.WhenAll(codeTask, ideTask, helpTask);
+            await Task.WhenAll(searchTasks);
 
             return new SearchDataModel(
-                codeItems: codeTask.Result,
-                ideItems: ideTask.Result,
-                helpItems: helpTask.Result);
+                codeItems: searchTasks[0].Result,
+                ideItems: searchTasks[1].Result,
+                helpItems: searchTasks[2].Result);
+        }
+
+        private void StartPivotSearch(
+            IEnumerable<(IOmniBoxItemsSource source, IOmniBoxItemsSourceProviderMetadata metadata)> itemsSources,
+            IPatternMatcherFactory patternMatcherFactory,
+            string searchString,
+            OmniBoxPivot searchPivot,
+            OmniBoxPivot pivot,
+            IList<Task<ImmutableArray<OmniBoxItem>>> searchTasks)
+        {
+            if (searchPivot.HasFlag(pivot))
+            {
+                searchTasks.Add(
+                    Task.Run(() => SearchAndSortAndFilterResultsAsync(
+                        SelectPivotProviders(itemsSources, pivot),
+                        patternMatcherFactory,
+                        searchString),
+                        this.CancellationToken));
+            }
+            else
+            {
+                searchTasks.Add(Task.FromResult(ImmutableArray<OmniBoxItem>.Empty));
+            }
         }
 
         public void Dispose()
