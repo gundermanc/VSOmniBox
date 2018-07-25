@@ -9,7 +9,7 @@ box could conceivably act as a code search, discoverability mechanism, and user 
 
 ## Features
 - Code Search (encompasses all of NavigateTo/GoTo)
-- Menu/Options search (encompasses all of Quick Launch)
+- Menu/Options/Installer/Nuget search (encompasses all of Quick Launch)
 - Template search (encompasses all of New Project Dialog search)
 - Docs search (searches docs.microsoft.com)
 
@@ -19,6 +19,7 @@ box could conceivably act as a code search, discoverability mechanism, and user 
 - Display options as checkboxes inline
 - Display theme as inline drop down
 - Cortana style 'IDE cards' (displays quick actions such as errors, test failures, etc. based on IDE state).
+- Gallery search (could be ported from: https://github.com/gundermanc/VSPackageInstaller)
 
 ## State of the Project
 
