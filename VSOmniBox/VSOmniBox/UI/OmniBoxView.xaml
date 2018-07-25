@@ -17,7 +17,7 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         SizeToContent="Height"
-        Width="400"
+        Width="600"
         WindowStartupLocation="CenterOwner"
         WindowStyle="None">
     <Window.Resources>
@@ -123,8 +123,12 @@
     </Window.InputBindings>
 
     <Window.Content >
-        <TabControl Background="{DynamicResource {x:Static vs_shell:CommonControlsColors.ComboBoxBackgroundBrushKey}}">
-            <TabItem x:Name="ContextMenuHeader" Header="Omnibox Search" FontSize="20">
+
+        <!-- 💣 OH NO! Hackathon ends in 2 hours and I REALLY just need this to work so I'm duplicating all this XAML.... Will Cleanup someday. 😢 -->
+        <TabControl x:Name="TabControl"
+                    Background="{DynamicResource {x:Static vs_shell:CommonControlsColors.ComboBoxBackgroundBrushKey}}"
+                    SelectionChanged="OnTabChanged">
+            <TabItem x:Name="ContextMenuHeader" Header="Search All" FontSize="20">
                 <Border Style="{StaticResource PopupBorderStyle}">
                     <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
                         <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
@@ -140,9 +144,79 @@
                                 </TextBox.InputBindings>
                             </TextBox>
                         </DockPanel>
+                        <ListBox DockPanel.Dock="Bottom"
+                                 ItemsSource="{Binding SearchResults}"
+                                 MouseDoubleClick="OnMouseDoubleClick"
+                                 SelectionChanged="SelectionChanged"
+                                 SelectedIndex="{Binding SelectedItemIndex}" />
+                    </DockPanel>
+                </Border>
+            </TabItem>
+            <TabItem Header="Search Code" FontSize="20">
+                <Border Style="{StaticResource PopupBorderStyle}">
+                    <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
+                        <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
+                            <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
+                            <TextBox DockPanel.Dock="Right"
+                                     Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Command="{Binding DownCommand}" Key="Down" />
+                                    <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
+                                    <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
+                                    <KeyBinding Command="{Binding UpCommand}" Key="Up" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </DockPanel>
                         <ListBox x:Name="ResultsBox"
                                  DockPanel.Dock="Bottom"
                                  ItemsSource="{Binding SearchResults}"
+                                 MouseDoubleClick="OnMouseDoubleClick"
+                                 SelectionChanged="SelectionChanged"
+                                 SelectedIndex="{Binding SelectedItemIndex}" />
+                    </DockPanel>
+                </Border>
+            </TabItem>
+            <TabItem Header="Search IDE" FontSize="20">
+                <Border Style="{StaticResource PopupBorderStyle}">
+                    <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
+                        <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
+                            <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
+                            <TextBox DockPanel.Dock="Right"
+                                     Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Command="{Binding DownCommand}" Key="Down" />
+                                    <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
+                                    <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
+                                    <KeyBinding Command="{Binding UpCommand}" Key="Up" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </DockPanel>
+                        <ListBox DockPanel.Dock="Bottom"
+                                 ItemsSource="{Binding SearchResults}"
+                                 MouseDoubleClick="OnMouseDoubleClick"
+                                 SelectionChanged="SelectionChanged"
+                                 SelectedIndex="{Binding SelectedItemIndex}" />
+                    </DockPanel>
+                </Border>
+            </TabItem>
+            <TabItem Header="Search Help" FontSize="20">
+                <Border Style="{StaticResource PopupBorderStyle}">
+                    <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
+                        <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
+                            <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
+                            <TextBox DockPanel.Dock="Right"
+                                     Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Command="{Binding DownCommand}" Key="Down" />
+                                    <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
+                                    <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
+                                    <KeyBinding Command="{Binding UpCommand}" Key="Up" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </DockPanel>
+                        <ListBox DockPanel.Dock="Bottom"
+                                 ItemsSource="{Binding SearchResults}"
+                                 MouseDoubleClick="OnMouseDoubleClick"
                                  SelectionChanged="SelectionChanged"
                                  SelectedIndex="{Binding SelectedItemIndex}" />
                     </DockPanel>

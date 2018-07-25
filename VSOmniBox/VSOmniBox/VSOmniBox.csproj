@@ -70,6 +70,7 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="UI\IInvokable.cs" />
+    <Compile Include="UI\ISelectionChangable.cs" />
     <Compile Include="UI\OmniBoxBroker.cs" />
     <Compile Include="Data\SearchController.cs" />
     <Compile Include="UI\Commands\DismissCommand.cs" />

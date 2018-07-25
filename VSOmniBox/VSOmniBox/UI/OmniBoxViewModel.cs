@@ -11,14 +11,15 @@
     using VSOmniBox.Data;
     using VSOmniBox.UI.Commands;
 
-    internal sealed class OmniBoxViewModel : INotifyPropertyChanged, IInvokable
+    internal sealed class OmniBoxViewModel : INotifyPropertyChanged, IInvokable, IPivotable
     {
         private readonly IOmniBoxUIService broker;
 
         private string searchString = string.Empty;
         private int selectedItemIndex = -1;
-        private SearchDataModel searchDataModel;
+        private SearchDataModel searchDataModel = SearchDataModel.Empty;
         private IReadOnlyList<OmniBoxItem> searchResults;
+        private OmniBoxPivot currentPivot = OmniBoxPivot.Code | OmniBoxPivot.IDE | OmniBoxPivot.Help;
 
         public OmniBoxViewModel(IOmniBoxUIService broker)
         {
@@ -103,6 +104,20 @@
             }
         }
 
+        public OmniBoxPivot Pivot
+        {
+            get => this.currentPivot;
+            set
+            {
+                if (this.currentPivot != value)
+                {
+                    this.currentPivot = value;
+                    this.UpdateFromSearchDataModel(this.searchDataModel);
+                    this.NotifyPropertyChanged(nameof(Pivot));
+                }
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -118,33 +133,33 @@
 
             var resultsListBuilder = ImmutableArray.CreateBuilder<OmniBoxItem>();
 
-            if (searchDataModel.CodeItems.Length > 0)
+            if (this.Pivot.HasFlag(OmniBoxPivot.Code) && searchDataModel.CodeItems.Length > 0)
             {
                 resultsListBuilder.Add(
                     new OmniBoxPivotItem(
                         Strings.CodePivotItemTitle,
                         description: string.Empty,
-                        action: () => UpdateFromPivot(OmniBoxPivot.Code)));
+                        action: () => this.Pivot = OmniBoxPivot.Code));
                 resultsListBuilder.AddRange(searchDataModel.CodeItems.Take(MaxResultsPerPivot));
             }
 
-            if (searchDataModel.IDEItems.Length > 0)
+            if (this.Pivot.HasFlag(OmniBoxPivot.IDE) && searchDataModel.IDEItems.Length > 0)
             {
                 resultsListBuilder.Add(
                     new OmniBoxPivotItem(
                         Strings.IDEPivotItemTitle,
                         description: string.Empty,
-                        action: () => UpdateFromPivot(OmniBoxPivot.IDE)));
+                        action: () => this.Pivot = OmniBoxPivot.IDE));
                 resultsListBuilder.AddRange(searchDataModel.IDEItems.Take(MaxResultsPerPivot));
             }
 
-            if (searchDataModel.HelpItems.Length > 0)
+            if (this.Pivot.HasFlag(OmniBoxPivot.Help) && searchDataModel.HelpItems.Length > 0)
             {
                 resultsListBuilder.Add(
                     new OmniBoxPivotItem(
                         Strings.HelpPivotItemTitle,
                         description: string.Empty,
-                        action: () => UpdateFromPivot(OmniBoxPivot.Help)));
+                        action: () => this.Pivot = OmniBoxPivot.Help));
                 resultsListBuilder.AddRange(searchDataModel.HelpItems.Take(MaxResultsPerPivot));
             }
 
@@ -174,22 +189,6 @@
 
         private void NotifyPropertyChanged(string paramName)
             => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(paramName));
-
-        private void UpdateFromPivot(OmniBoxPivot pivot)
-        {
-            switch (pivot)
-            {
-                case OmniBoxPivot.Code:
-                    this.SearchResults = this.searchDataModel.CodeItems;
-                    break;
-                case OmniBoxPivot.IDE:
-                    this.SearchResults = this.searchDataModel.IDEItems;
-                    break;
-                case OmniBoxPivot.Help:
-                    this.SearchResults = this.searchDataModel.HelpItems;
-                    break;
-            }
-        }
 
         #endregion
     }

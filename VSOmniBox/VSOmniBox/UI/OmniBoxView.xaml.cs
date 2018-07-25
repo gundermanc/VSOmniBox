@@ -1,11 +1,10 @@
 ﻿namespace VSOmniBox.UI
 {
-    using Microsoft.VisualStudio.Imaging;
-    using System.Collections;
-    using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Media;
+    using VSOmniBox.API.Data;
 
     /// <summary>
     /// Interaction logic for OmniBoxView.xaml
@@ -20,8 +19,6 @@
             var topLeftAnchor = docWell.PointToScreen(new Point(0, 0));
             this.Top = topLeftAnchor.Y;
             this.Left = (topLeftAnchor.X + docWell.ActualWidth) / 2 - this.Width/2;
-            this.ResultsBox.MouseDoubleClick += OnMouseDoubleClick;
-
         }
 
         public static FrameworkElement FindVisualChildren(DependencyObject depObj, string typeName) 
@@ -62,6 +59,31 @@
             if (this.ResultsBox.SelectedItems.Count == 1)
             {
                 this.ResultsBox.ScrollIntoView(this.ResultsBox.SelectedItem);
+            }
+        }
+
+        private void OnTabChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.DataContext is IPivotable pivotable)
+            {
+                switch (this.TabControl.SelectedIndex)
+                {
+                    case 0:
+                        pivotable.Pivot = OmniBoxPivot.Code | OmniBoxPivot.IDE | OmniBoxPivot.Help;
+                        break;
+                    case 1:
+                        pivotable.Pivot = OmniBoxPivot.Code;
+                        break;
+                    case 2:
+                        pivotable.Pivot = OmniBoxPivot.IDE;
+                        break;
+                    case 3:
+                        pivotable.Pivot = OmniBoxPivot.Help;
+                        break;
+                    default:
+                        Debug.Fail("No handling for this tab");
+                        break;
+                }
             }
         }
     }
