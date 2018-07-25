@@ -31,8 +31,12 @@
             {
                 try
                 {
+                    searchSession.CancellationToken.ThrowIfCancellationRequested();
+
                     // Has STA requirement, explicit marshal to avoid potential deadlocks.
-                    await this.joinableTaskContext.Factory.SwitchToMainThreadAsync();
+                    await this.joinableTaskContext.Factory.SwitchToMainThreadAsync(searchSession.CancellationToken);
+
+                    searchSession.CancellationToken.ThrowIfCancellationRequested();
 
                     IVsTemplateProviderFactory templateProviderFactory = await asyncServiceProvider
                         .GetServiceAsync(typeof(Microsoft.Internal.VisualStudio.Shell.Interop.SVsDialogService)) as IVsTemplateProviderFactory;
@@ -44,11 +48,12 @@
                     foreach (IVsSearchResultTemplate template in searchResultsNode.Extensions)
                     {
                         OmniBoxItem obItem = new NPDTemplateSearchResultShim(template, installedTemplateProvider);
-
                         searchSession.AddItem(obItem);
+
+                        searchSession.CancellationToken.ThrowIfCancellationRequested();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (!(ex is OperationCanceledException))
                 {
                     Debug.Fail("Exception during NPD search " + ex.Message);
                 }

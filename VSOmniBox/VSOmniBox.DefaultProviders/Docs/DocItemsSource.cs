@@ -1,5 +1,6 @@
-﻿using System.IO;
-using System.Net;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Xml;
 using VSOmniBox.API.Data;
@@ -17,7 +18,6 @@ namespace VSOmniBox.DefaultProviders.Docs
 
             try
             {
-
                 string result;
                 using (var client = new HttpClient())
                 using (var response = await client.GetAsync($"https://docs.microsoft.com/api/search/rss?search={searchString}&locale=en-us", searchSession.CancellationToken))
@@ -50,9 +50,10 @@ namespace VSOmniBox.DefaultProviders.Docs
                     }
                 }
             }
-            catch { }
-
-            return;
+            catch (Exception ex) when (!(ex is OperationCanceledException))
+            {
+                Debug.Fail("Failed to search for doc item: " + ex.Message);
+            }
         }
     }
 }
