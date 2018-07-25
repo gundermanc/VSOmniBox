@@ -1,21 +1,17 @@
-﻿using Microsoft.Internal.VisualStudio.Shell;
-using Microsoft.Internal.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.TemplateProviders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VSOmniBox.API.Data;
-
-namespace VSOmniBox.DefaultProviders.NPDTemplate
+﻿namespace VSOmniBox.DefaultProviders.NPDTemplate
 {
-    internal class NPDTemplateSearchResultShim : OmniBoxItem
+    using System;
+    using System.Diagnostics;
+    using Microsoft.Internal.VisualStudio.Shell;
+    using Microsoft.Internal.VisualStudio.Shell.Interop;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.TemplateProviders;
+    using VSOmniBox.API.Data;
+
+    internal sealed class NPDTemplateSearchResultShim : OmniBoxItem
     {
-        private IVsSearchResultTemplate template;
-        private IVsTemplateProvider installedTemplateProvider;
+        private readonly IVsSearchResultTemplate template;
+        private readonly IVsTemplateProvider installedTemplateProvider;
 
         public NPDTemplateSearchResultShim(IVsSearchResultTemplate template, IVsTemplateProvider installedTemplateProvider)
         {
@@ -51,10 +47,8 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
                 }
                 catch (Exception ex)
                 {
-                    
+                    Debug.Fail("Failed to invoke new project dialog: " + ex.Message);
                 }
-
-                //UpdateProjectMRU();
             }
         }
     }

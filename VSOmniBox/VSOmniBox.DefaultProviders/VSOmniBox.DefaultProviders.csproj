@@ -143,11 +143,9 @@
     <Compile Include="NavigateTo\NavigateToOptions.cs" />
     <Compile Include="NavigateTo\NavigateToItemsSource.cs" />
     <Compile Include="NavigateTo\NavigateToItemsSourceProvider.cs" />
-    <Compile Include="NPDTemplate\ProjectTemplateSearchTask.cs" />
+    <Compile Include="NPDTemplate\NPDTemplateSearchResultShim.cs" />
     <Compile Include="NPDTemplate\NPDTemplateItemsSource.cs" />
     <Compile Include="NPDTemplate\NPDTemplateItemsSourceProvider.cs" />
-    <Compile Include="NPDTemplate\NPDTemplateSearchCallbackShim.cs" />
-    <Compile Include="NPDTemplate\NPDTemplateSearchResultShim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuickLaunch\QuickLaunchItemsSource.cs" />
     <Compile Include="QuickLaunch\QuickLaunchItemsSourceProvider.cs" />

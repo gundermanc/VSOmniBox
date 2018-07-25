@@ -1,33 +1,33 @@
-﻿using Microsoft.VisualStudio.Dialogs;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.TemplateProviders;
-using Microsoft.VisualStudio.Threading;
-using Microsoft.VisualStudio.Utilities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VSOmniBox.API.Data;
-using VSOmniBox.DefaultProviders.QuickLaunch;
-
-namespace VSOmniBox.DefaultProviders.NPDTemplate
+﻿namespace VSOmniBox.DefaultProviders.NPDTemplate
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.Composition;
+    using System.Threading.Tasks;
+    using Microsoft.VisualStudio.Shell;
+    using Microsoft.VisualStudio.Threading;
+    using Microsoft.VisualStudio.Utilities;
+    using VSOmniBox.API.Data;
+    using VSOmniBox.DefaultProviders.QuickLaunch;
+
     [Export(typeof(IOmniBoxItemsSourceProvider))]
     [Name(nameof(NPDTemplateItemsSourceProvider))]
     [OmniBoxPivot(OmniBoxPivot.IDE)]
     [Order(Before = nameof(QuickLaunchItemsSourceProvider))]
     internal sealed class NPDTemplateItemsSourceProvider : IOmniBoxItemsSourceProvider
     {
+        private readonly JoinableTaskContext joinableTaskContext;
         private readonly SVsServiceProvider shellServiceProvider;
 
         [ImportingConstructor]
         public NPDTemplateItemsSourceProvider(
+            JoinableTaskContext joinableTaskContext,
             SVsServiceProvider shellServiceProvider)
         {
-            this.shellServiceProvider = shellServiceProvider;
+            this.joinableTaskContext = joinableTaskContext
+                ?? throw new ArgumentNullException(nameof(joinableTaskContext));
+            this.shellServiceProvider = shellServiceProvider
+                ?? throw new ArgumentNullException(nameof(shellServiceProvider));
         }
 
         public Task<IEnumerable<IOmniBoxItemsSource>> CreateItemsSourcesAsync()
@@ -38,7 +38,9 @@ namespace VSOmniBox.DefaultProviders.NPDTemplate
         // Must happen on the UI thread.
         private IEnumerable<IOmniBoxItemsSource> CreateSources()
         {
-            yield return new NPDTemplateItemsSource(shellServiceProvider);
+            yield return new NPDTemplateItemsSource(
+                this.joinableTaskContext,
+                this.shellServiceProvider);
         }
     }
 }
