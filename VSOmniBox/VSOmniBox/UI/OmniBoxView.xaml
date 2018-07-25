@@ -3,8 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:vs_shell="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
         xmlns:ui="clr-namespace:VSOmniBox.UI"
+        xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"  
+        xmlns:theming="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Imaging"  
+        xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"  
         xmlns:uicolors="clr-namespace:VSOmniBox.UI.Colors"
+        xmlns:utilities1="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Utilities"
         mc:Ignorable="d" 
         AllowsTransparency="True"
         Background="Transparent"
@@ -17,10 +22,42 @@
         WindowStyle="None">
     <Window.Resources>
 
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid x:Name="Root" Background="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBackgroundBrushKey}}">
+                            <Border x:Name="Border"
+                                    Margin="-2,0,-4,0"
+                                    BorderThickness="1"
+                                    BorderBrush="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBorderBrushKey}}"
+                                    Background="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBackgroundBrushKey}}">
+                                <ContentPresenter x:Name="ContentSite"
+                                 
+                                    VerticalAlignment="Center"
+                              ContentSource="Header"
+                              Margin="12,2,12,2"
+                              RecognizesAccessKey="True" />
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected"
+                   Value="True">
+                                <Setter Property="Foreground"
+                                           Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxTextBrushKey}}" />
+                                <Setter Property="BorderBrush"
+                                             Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBorderBrushKey}}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Search box item template styles our results list. -->
         <DataTemplate x:Key="SearchBoxDataTemplate">
             <StackPanel>
-                <TextBlock x:Name="TitleBlock" FontSize="18" Text="{Binding Path=Title}" Margin="20,0,0,0"/>
+                <TextBlock x:Name="TitleBlock" FontSize="18" Text="{Binding Path=Title}" Margin="20,0,0,0" />
                 <TextBlock x:Name="DescriptionBlock" FontSize="14" Text="{Binding Path=Description}" FontStyle="Italic" Margin="25,0,0,0" ToolTip="{Binding Path=Description}"/>
             </StackPanel>
 
@@ -30,7 +67,7 @@
                 <DataTrigger Binding="{Binding Description}" Value="">
                     <Setter TargetName="DescriptionBlock" Property="Visibility" Value="Collapsed" />
                 </DataTrigger>
-                
+
                 <!-- Empty description, hide the description block. -->
                 <DataTrigger Binding="{Binding Description}" Value="{x:Null}">
                     <Setter TargetName="DescriptionBlock" Property="Visibility" Value="Collapsed" />
@@ -47,17 +84,20 @@
         </DataTemplate>
 
         <Style x:Key="PopupBorderStyle" TargetType="{x:Type Border}">
-            <Setter Property="BorderThickness" Value="1.0" />
+            <Setter Property="BorderThickness" Value="0.0" />
             <!-- TODO: use something other than the text brush here. -->
-            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
-            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundBrushKey}}" />
-            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.ComboBoxBorderBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource {x:Static  vs_shell:CommonControlsColors.ComboBoxBackgroundBrushKey}}" />
+            <!--<Setter Property="CornerRadius" Value="5" />-->
         </Style>
 
         <Style TargetType="{x:Type TextBox}">
             <!-- TODO: use something other than the text brush here. -->
-            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
-            <Setter Property="Margin" Value="5" />
+            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBorderBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource {x:Static  vs_shell:CommonControlsColors.TextBoxBackgroundBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static  vs_shell:CommonControlsColors.TextBoxTextBrushKey}}" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="4" />
             <Setter Property="FontSize" Value="30" />
         </Style>
 
@@ -66,8 +106,8 @@
             <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
             <Setter Property="Focusable" Value="False" />
             <Setter Property="ItemTemplate" Value="{StaticResource SearchBoxDataTemplate}" />
-            <Setter Property="Margin" Value="5" />
-            <Setter Property="Margin" Value="5,0,5,5" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Margin" Value="1,0,1,1" />
             <Setter Property="MaxHeight" Value="600" />
             <Setter Property="MinHeight" Value="0" />
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
@@ -78,31 +118,41 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <utilities1:BrushToColorConverter x:Key="BrushToColorConverter"/>
+
     </Window.Resources>
+
 
     <Window.InputBindings>
         <KeyBinding Command="{Binding DismissCommand}" Key="Esc"/>
     </Window.InputBindings>
 
-    <Window.Content>
-        <Border Style="{StaticResource PopupBorderStyle}">
-            <DockPanel LastChildFill="True">
-                <TextBox Name="SearchTextBox"
-                         DockPanel.Dock="Top"
-                         Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.InputBindings>
-                        <KeyBinding Command="{Binding DownCommand}" Key="Down" />
-                        <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
-                        <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
-                        <KeyBinding Command="{Binding UpCommand}" Key="Up" />
-                    </TextBox.InputBindings>
-                </TextBox>
-                <ListBox x:Name="ResultsBox"
+    <Window.Content >
+        <TabControl Background="{DynamicResource {x:Static vs_shell:CommonControlsColors.ComboBoxBackgroundBrushKey}}">
+            <TabItem x:Name="ContextMenuHeader" Header="Omnibox Search" FontSize="20">
+                <Border Style="{StaticResource PopupBorderStyle}">
+                    <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
+                        <DockPanel LastChildFill="True"  DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
+                            <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
+                            <TextBox Name="SearchTextBox"  DockPanel.Dock="Right" 
+                         Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Command="{Binding DownCommand}" Key="Down" />
+                                    <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
+                                    <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
+                                    <KeyBinding Command="{Binding UpCommand}" Key="Up" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </DockPanel>
+                        <ListBox x:Name="ResultsBox"
                          DockPanel.Dock="Bottom"
                          ItemsSource="{Binding SearchResults}"
                          SelectionChanged="SelectionChanged"
                          SelectedIndex="{Binding SelectedItemIndex}" />
-            </DockPanel>
-        </Border>
+                    </DockPanel>
+                </Border>
+            </TabItem>
+        </TabControl>
     </Window.Content>
 </Window>
