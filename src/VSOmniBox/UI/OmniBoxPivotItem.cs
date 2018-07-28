@@ -10,7 +10,7 @@
         public OmniBoxPivotItem(
             string title,
             string description,
-            Action action)
+            Action action = null)
         {
             this.Title = title;
             this.Description = description;

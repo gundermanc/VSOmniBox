@@ -14,6 +14,7 @@
 
     internal sealed class OmniBoxViewModel : INotifyPropertyChanged, IInvokable, IPivotable
     {
+        private const OmniBoxPivot AllItemsPivot = (OmniBoxPivot.Code | OmniBoxPivot.IDE | OmniBoxPivot.Help);
         private readonly IOmniBoxUIService broker;
 
         private string searchString = string.Empty;
@@ -119,6 +120,70 @@
             }
         }
 
+        public bool IsAllItemsPivot
+        {
+            get => this.Pivot == AllItemsPivot;
+            set
+            {
+                if (this.Pivot != AllItemsPivot)
+                {
+                    this.Pivot = AllItemsPivot;
+                    this.NotifyPropertyChanged(nameof(IsAllItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsCodeItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsIDEItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsHelpItemsPivot));
+                }
+            }
+        }
+
+        public bool IsCodeItemsPivot
+        {
+            get => this.Pivot == OmniBoxPivot.Code;
+            set
+            {
+                if (this.Pivot != OmniBoxPivot.Code)
+                {
+                    this.Pivot = OmniBoxPivot.Code;
+                    this.NotifyPropertyChanged(nameof(IsAllItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsCodeItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsIDEItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsHelpItemsPivot));
+                }
+            }
+        }
+
+        public bool IsIDEItemsPivot
+        {
+            get => this.Pivot == OmniBoxPivot.IDE;
+            set
+            {
+                if (this.Pivot != OmniBoxPivot.IDE)
+                {
+                    this.Pivot = OmniBoxPivot.IDE;
+                    this.NotifyPropertyChanged(nameof(IsAllItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsCodeItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsIDEItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsHelpItemsPivot));
+                }
+            }
+        }
+
+        public bool IsHelpItemsPivot
+        {
+            get => this.Pivot == OmniBoxPivot.Help;
+            set
+            {
+                if (this.Pivot != OmniBoxPivot.Help)
+                {
+                    this.Pivot = OmniBoxPivot.Help;
+                    this.NotifyPropertyChanged(nameof(IsAllItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsCodeItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsIDEItemsPivot));
+                    this.NotifyPropertyChanged(nameof(IsHelpItemsPivot));
+                }
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -163,8 +228,7 @@
                 resultsListBuilder.Add(
                     new OmniBoxPivotItem(
                         Strings.CodePivotItemTitle,
-                        description: string.Empty,
-                        action: () => this.Pivot = OmniBoxPivot.Code));
+                        description: string.Empty));
                 resultsListBuilder.AddRange(searchDataModel.CodeItems.Take(MaxResultsPerPivot));
             }
 
@@ -173,8 +237,7 @@
                 resultsListBuilder.Add(
                     new OmniBoxPivotItem(
                         Strings.IDEPivotItemTitle,
-                        description: string.Empty,
-                        action: () => this.Pivot = OmniBoxPivot.IDE));
+                        description: string.Empty));
                 resultsListBuilder.AddRange(searchDataModel.IDEItems.Take(MaxResultsPerPivot));
             }
 
@@ -183,8 +246,7 @@
                 resultsListBuilder.Add(
                     new OmniBoxPivotItem(
                         Strings.HelpPivotItemTitle,
-                        description: string.Empty,
-                        action: () => this.Pivot = OmniBoxPivot.Help));
+                        description: string.Empty));
                 resultsListBuilder.AddRange(searchDataModel.HelpItems.Take(MaxResultsPerPivot));
             }
 

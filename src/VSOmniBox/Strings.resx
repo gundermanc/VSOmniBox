@@ -118,12 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CodePivotItemTitle" xml:space="preserve">
-    <value>Code Results (click for more)</value>
+    <value>Code Results</value>
   </data>
   <data name="IDEPivotItemTitle" xml:space="preserve">
-    <value>IDE Results (click for more)</value>
+    <value>IDE Results</value>
   </data>
   <data name="HelpPivotItemTitle" xml:space="preserve">
-    <value>Help Results (click for more)</value>
+    <value>Help Results</value>
   </data>
 </root>

@@ -3,11 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:vs_shell="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-        xmlns:ui="clr-namespace:VSOmniBox.UI"
-        xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"  
-        xmlns:theming="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Imaging"  
-        xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"  
+        xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+        xmlns:theming="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Imaging"
+        xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
         xmlns:uicolors="clr-namespace:VSOmniBox.UI.Colors"
         xmlns:utilities1="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Utilities"
         mc:Ignorable="d" 
@@ -21,36 +19,6 @@
         WindowStartupLocation="CenterOwner"
         WindowStyle="None">
     <Window.Resources>
-
-        <Style TargetType="{x:Type TabItem}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TabItem}">
-                        <Grid x:Name="Root" Background="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBackgroundBrushKey}}">
-                            <Border x:Name="Border"
-                                    Margin="-2,0,-4,0"
-                                    BorderThickness="1"
-                                    BorderBrush="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBorderBrushKey}}"
-                                    Background="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBackgroundBrushKey}}">
-                                <ContentPresenter x:Name="ContentSite"
-                                                  VerticalAlignment="Center"
-                                                  ContentSource="Header"
-                                                  Margin="12,2,12,2"
-                                                  RecognizesAccessKey="True" />
-                            </Border>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Foreground"
-                                           Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxTextBrushKey}}" />
-                                <Setter Property="BorderBrush"
-                                             Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBorderBrushKey}}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
 
         <!-- Search box item template styles our results list. -->
         <DataTemplate x:Key="SearchBoxDataTemplate">
@@ -78,26 +46,27 @@
                     <Setter Property="TextBlock.FontSize" Value="16" />
                     <Setter Property="TextBlock.FontWeight" Value="Bold" />
                 </DataTrigger>
+
             </DataTemplate.Triggers>
         </DataTemplate>
 
         <Style x:Key="PopupBorderStyle" TargetType="{x:Type Border}">
-            <Setter Property="BorderThickness" Value="0.0" />
-            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.ComboBoxBorderBrushKey}}" />
-            <Setter Property="Background" Value="{DynamicResource {x:Static  vs_shell:CommonControlsColors.ComboBoxBackgroundBrushKey}}" />
+            <Setter Property="BorderThickness" Value="1.0" />
+            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static uicolors:VSColors.SearchPopupBorderBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.SearchPopupBrushKey}}" />
         </Style>
 
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vs_shell:CommonControlsColors.TextBoxBorderBrushKey}}" />
-            <Setter Property="Background" Value="{DynamicResource {x:Static  vs_shell:CommonControlsColors.TextBoxBackgroundBrushKey}}" />
-            <Setter Property="Foreground" Value="{DynamicResource {x:Static  vs_shell:CommonControlsColors.TextBoxTextBrushKey}}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static uicolors:VSColors.SearchTextBoxBorderBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.SearchTextBoxBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static uicolors:VSColors.SearchTextBoxTextBrushKey}}" />
             <Setter Property="Margin" Value="0" />
             <Setter Property="Padding" Value="4" />
             <Setter Property="FontSize" Value="20" />
         </Style>
 
         <Style TargetType="{x:Type ListBox}">
-            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.PopupBackgroundTextBrushKey}}" />
+            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.SearchResultsListBrushKey}}" />
             <Setter Property="Focusable" Value="False" />
             <Setter Property="ItemTemplate" Value="{StaticResource SearchBoxDataTemplate}" />
             <Setter Property="Margin" Value="1" />
@@ -115,113 +84,119 @@
 
         <utilities1:BrushToColorConverter x:Key="BrushToColorConverter"/>
 
-    </Window.Resources>
+        <Style TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.SearchToggleButtonBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static uicolors:VSColors.SearchToggleButtonTextBrushKey}}" />
+            <Setter Property="BorderThickness" Value="0.0" />
+            <Setter Property="Padding" Value="5.0" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
 
+            <!-- 💕 Thank you Stack Overflow 💕: https://stackoverflow.com/questions/5618800/change-the-background-color-of-a-toggle-button-when-the-toggle-button-is-checked-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding Background}"
+                                BorderThickness="1,1,1,1"
+                                HorizontalAlignment="Center"
+                                Padding="{TemplateBinding Padding}"
+                                SnapsToDevicePixels="True"
+                                VerticalAlignment="Center">
+                            <ContentPresenter x:Name="Content" VerticalAlignment="Bottom"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.SearchToggleButtonCheckedBrushKey}}" />
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static uicolors:VSColors.SearchToggleButtonCheckedTextBrushKey}}" />
+                                <Setter Property="Padding" Value="5,10,5,10" />
+                                <Setter TargetName="Content" Property="VerticalAlignment" Value="Center" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.SearchToggleButtonCheckedBrushKey}}" />
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static uicolors:VSColors.SearchToggleButtonCheckedTextBrushKey}}" />
+                    <Setter Property="Padding" Value="5,10,5,10" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
 
     <Window.InputBindings>
         <KeyBinding Command="{Binding DismissCommand}" Key="Esc"/>
     </Window.InputBindings>
 
-    <Window.Content >
+    <Window.Content>
 
-        <!-- 💣 OH NO! Hackathon ends in 2 hours and I REALLY just need this to work so I'm duplicating all this XAML.... Will Cleanup someday. 😢 -->
-        <TabControl x:Name="TabControl"
-                    Background="{DynamicResource {x:Static vs_shell:CommonControlsColors.ComboBoxBackgroundBrushKey}}"
-                    SelectionChanged="OnTabChanged">
-            <TabItem x:Name="ContextMenuHeader" Header="Search All" FontSize="12">
-                <Border Style="{StaticResource PopupBorderStyle}">
-                    <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
-                        <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
-                            <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
-                            <TextBox Name="SearchTextBox"
+        <Border Style="{StaticResource PopupBorderStyle}" >
+            <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
+
+                <StackPanel DockPanel.Dock="Top"  Orientation="Horizontal">
+
+                    <ToggleButton IsChecked="{Binding IsAllItemsPivot}">
+                        <ToggleButton.Content>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                                <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.All}" Margin="2,0,2,0" />
+                                <TextBlock Text="All (Alt+Q)" />
+                            </StackPanel>
+                        </ToggleButton.Content>
+                    </ToggleButton>
+
+                    <ToggleButton IsChecked="{Binding IsCodeItemsPivot}">
+                        <ToggleButton.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Code}" Margin="2,0,2,0" />
+                                <TextBlock Text="Code (Ctrl+T)" />
+                            </StackPanel>
+                        </ToggleButton.Content>
+                    </ToggleButton>
+
+                    <ToggleButton IsChecked="{Binding IsIDEItemsPivot}">
+                        <ToggleButton.Content>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                                <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Extension}" Margin="2,0,2,0" />
+                                <TextBlock Text="IDE (Ctrl+Q)" />
+                            </StackPanel>
+                        </ToggleButton.Content>
+                    </ToggleButton>
+
+                    <ToggleButton IsChecked="{Binding IsHelpItemsPivot}">
+                        <ToggleButton.Content>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                                <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.F1Help}" Margin="2,0,2,0" />
+                                <TextBlock Text="Help (Ctrl+F1)" />
+                            </StackPanel>
+                        </ToggleButton.Content>
+                    </ToggleButton>
+                </StackPanel>
+
+                <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
+                    <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
+                    <TextBox Name="SearchTextBox"
                                      DockPanel.Dock="Right"
                                      Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Command="{Binding DownCommand}" Key="Down" />
-                                    <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
-                                    <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
-                                    <KeyBinding Command="{Binding UpCommand}" Key="Up" />
-                                </TextBox.InputBindings>
-                            </TextBox>
-                        </DockPanel>
-                        <ListBox DockPanel.Dock="Bottom"
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding DownCommand}" Key="Down" />
+                            <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
+                            <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
+                            <KeyBinding Command="{Binding UpCommand}" Key="Up" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+                </DockPanel>
+                <ListBox x:Name="ResultsBox"
+                    DockPanel.Dock="Bottom"
                                  ItemsSource="{Binding SearchResults}"
                                  MouseDoubleClick="OnMouseDoubleClick"
                                  SelectionChanged="SelectionChanged"
                                  SelectedIndex="{Binding SelectedItemIndex}" />
-                    </DockPanel>
-                </Border>
-            </TabItem>
-            <TabItem Header="Search Code" FontSize="12">
-                <Border Style="{StaticResource PopupBorderStyle}">
-                    <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
-                        <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
-                            <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
-                            <TextBox DockPanel.Dock="Right"
-                                     Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Command="{Binding DownCommand}" Key="Down" />
-                                    <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
-                                    <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
-                                    <KeyBinding Command="{Binding UpCommand}" Key="Up" />
-                                </TextBox.InputBindings>
-                            </TextBox>
-                        </DockPanel>
-                        <ListBox x:Name="ResultsBox"
-                                 DockPanel.Dock="Bottom"
-                                 ItemsSource="{Binding SearchResults}"
-                                 MouseDoubleClick="OnMouseDoubleClick"
-                                 SelectionChanged="SelectionChanged"
-                                 SelectedIndex="{Binding SelectedItemIndex}" />
-                    </DockPanel>
-                </Border>
-            </TabItem>
-            <TabItem Header="Search IDE" FontSize="12">
-                <Border Style="{StaticResource PopupBorderStyle}">
-                    <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
-                        <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
-                            <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
-                            <TextBox DockPanel.Dock="Right"
-                                     Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Command="{Binding DownCommand}" Key="Down" />
-                                    <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
-                                    <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
-                                    <KeyBinding Command="{Binding UpCommand}" Key="Up" />
-                                </TextBox.InputBindings>
-                            </TextBox>
-                        </DockPanel>
-                        <ListBox DockPanel.Dock="Bottom"
-                                 ItemsSource="{Binding SearchResults}"
-                                 MouseDoubleClick="OnMouseDoubleClick"
-                                 SelectionChanged="SelectionChanged"
-                                 SelectedIndex="{Binding SelectedItemIndex}" />
-                    </DockPanel>
-                </Border>
-            </TabItem>
-            <TabItem Header="Search Help" FontSize="12">
-                <Border Style="{StaticResource PopupBorderStyle}">
-                    <DockPanel LastChildFill="True" theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource Self}, Converter={StaticResource BrushToColorConverter}}">
-                        <DockPanel LastChildFill="True" DockPanel.Dock="Top" HorizontalAlignment="Stretch" >
-                            <imaging:CrispImage Width="32" DockPanel.Dock="Left" Height="32" Moniker="{x:Static catalog:KnownMonikers.Search}" Margin="2" />
-                            <TextBox DockPanel.Dock="Right"
-                                     Text="{Binding SearchString, UpdateSourceTrigger=PropertyChanged, FallbackValue='Search Anything...'}" Margin="2">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Command="{Binding DownCommand}" Key="Down" />
-                                    <KeyBinding Command="{Binding DismissCommand}" Key="Esc" />
-                                    <KeyBinding Command="{Binding InvokeCommand}" Key="Return" />
-                                    <KeyBinding Command="{Binding UpCommand}" Key="Up" />
-                                </TextBox.InputBindings>
-                            </TextBox>
-                        </DockPanel>
-                        <ListBox DockPanel.Dock="Bottom"
-                                 ItemsSource="{Binding SearchResults}"
-                                 MouseDoubleClick="OnMouseDoubleClick"
-                                 SelectionChanged="SelectionChanged"
-                                 SelectedIndex="{Binding SelectedItemIndex}" />
-                    </DockPanel>
-                </Border>
-            </TabItem>
-        </TabControl>
+            </DockPanel>
+        </Border>
+
     </Window.Content>
 </Window>

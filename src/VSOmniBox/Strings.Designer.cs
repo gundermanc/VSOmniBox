@@ -61,7 +61,7 @@ namespace VSOmniBox {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Code Results (click for more).
+        ///   Looks up a localized string similar to Code Results.
         /// </summary>
         internal static string CodePivotItemTitle {
             get {
@@ -70,7 +70,7 @@ namespace VSOmniBox {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Help Results (click for more).
+        ///   Looks up a localized string similar to Help Results.
         /// </summary>
         internal static string HelpPivotItemTitle {
             get {
@@ -79,7 +79,7 @@ namespace VSOmniBox {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IDE Results (click for more).
+        ///   Looks up a localized string similar to IDE Results.
         /// </summary>
         internal static string IDEPivotItemTitle {
             get {

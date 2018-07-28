@@ -31,30 +31,5 @@
                 this.ResultsBox.ScrollIntoView(this.ResultsBox.SelectedItem);
             }
         }
-
-        private void OnTabChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (this.DataContext is IPivotable pivotable)
-            {
-                switch (this.TabControl.SelectedIndex)
-                {
-                    case 0:
-                        pivotable.Pivot = OmniBoxPivot.Code | OmniBoxPivot.IDE | OmniBoxPivot.Help;
-                        break;
-                    case 1:
-                        pivotable.Pivot = OmniBoxPivot.Code;
-                        break;
-                    case 2:
-                        pivotable.Pivot = OmniBoxPivot.IDE;
-                        break;
-                    case 3:
-                        pivotable.Pivot = OmniBoxPivot.Help;
-                        break;
-                    default:
-                        Debug.Fail("No handling for this tab");
-                        break;
-                }
-            }
-        }
     }
 }
