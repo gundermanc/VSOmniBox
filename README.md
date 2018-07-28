@@ -23,7 +23,7 @@ box could conceivably act as a code search, discoverability mechanism, and user 
 
 ## State of the Project
 
-This project is 'demoable' but not 'usable' and is unlikely to be maintained. Use at your own risk.
+This project is 'demoable' and 'usable' but is not 'dependable'. I'm looking for additional contributors to help me bring up the quality and breadth.
 
 ## Building
 
