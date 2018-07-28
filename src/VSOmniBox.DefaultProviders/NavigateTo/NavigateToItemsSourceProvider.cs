@@ -10,7 +10,6 @@
     using Microsoft.VisualStudio.Threading;
     using Microsoft.VisualStudio.Utilities;
     using VSOmniBox.API.Data;
-    using VSOmniBox.DefaultProviders.QuickLaunch;
 
     [Export(typeof(IOmniBoxItemsSourceProvider))]
     [Name(nameof(NavigateToItemsSourceProvider))]
@@ -21,8 +20,6 @@
         private readonly JoinableTaskContext joinableTaskContext;
         private readonly IEnumerable<Lazy<INavigateToItemProviderFactory>> itemProviderFactories;
 
-        private AsyncLazy<IEnumerable<INavigateToItemProvider>> itemProviders;
-
         [ImportingConstructor]
         public NavigateToItemsSourceProvider(
             SVsServiceProvider shellServiceProvider,
@@ -32,42 +29,15 @@
             this.shellServiceProvider = shellServiceProvider;
             this.joinableTaskContext = joinableTaskContext;
             this.itemProviderFactories = itemProviderFactories;
-
-            this.itemProviders = new AsyncLazy<IEnumerable<INavigateToItemProvider>>(
-                () => System.Threading.Tasks.Task.FromResult(this.CreateItemProviders()));
         }
 
-        public async Task<IEnumerable<IOmniBoxItemsSource>> CreateItemsSourcesAsync()
+        public Task<IEnumerable<IOmniBoxItemsSource>> CreateItemsSourcesAsync()
         {
-            if (!this.joinableTaskContext.IsOnMainThread)
-            {
-                throw new InvalidOperationException("Must be created on the UI thread.");
-            }
-
-            return ((await this.itemProviders
-                .GetValueAsync())
-                .Select(provider => NavigateToItemsSource.Create(this.joinableTaskContext, provider)));
-        }
-
-        private IEnumerable<INavigateToItemProvider> CreateItemProviders()
-        {
-            if (!this.joinableTaskContext.IsOnMainThread)
-            {
-                throw new InvalidOperationException("Must be created on the UI thread.");
-            }
-
-            foreach (var factory in this.itemProviderFactories)
-            {
-                // TODO: the file name provider currently breaks search because it fails to report search completion.
-                // Turning it off until we figure out what's wrong.
-                if (factory.Value.GetType().FullName != "Microsoft.VisualStudio.Language.NavigateTo.FileNameProvider.NavigateToItemProviderFactory" &&
-                    factory.Value.TryCreateNavigateToItemProvider(
-                    this.shellServiceProvider,
-                    out var provider))
-                {
-                    yield return provider;
-                }
-            }
+            // TODO: the file name provider currently breaks search because it fails to report search completion.
+            // Turning it off until we figure out what's wrong.
+            return System.Threading.Tasks.Task.FromResult<IEnumerable<IOmniBoxItemsSource>>(this.itemProviderFactories
+                .Where(factory => factory.Value.GetType().FullName != "Microsoft.VisualStudio.Language.NavigateTo.FileNameProvider.NavigateToItemProviderFactory")
+                .Select(lazy => NavigateToItemsSource.Create(this.shellServiceProvider, this.joinableTaskContext, lazy.Value)));
         }
     }
 }

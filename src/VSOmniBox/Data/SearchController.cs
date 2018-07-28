@@ -88,7 +88,7 @@
         {
             this.joinableTaskContext.Factory.RunAsync(async delegate
             {
-                await this.CreateSourcesAsync();
+                await this.itemsSources.GetValueAsync();
             });
         }
 

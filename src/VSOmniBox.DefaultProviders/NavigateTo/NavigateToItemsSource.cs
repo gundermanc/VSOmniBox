@@ -1,26 +1,35 @@
 ﻿namespace VSOmniBox.DefaultProviders.NavigateTo
 {
     using System;
-    using System.Threading.Tasks;
     using Microsoft.VisualStudio.Language.NavigateTo.Interfaces;
+    using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Threading;
     using VSOmniBox.API.Data;
 
     internal class NavigateToItemsSource : IOmniBoxItemsSource
     {
+        private readonly SVsServiceProvider shellServiceProvider;
         private readonly JoinableTaskContext joinableTaskContext;
-        private readonly INavigateToItemProvider itemProvider;
+        private readonly INavigateToItemProviderFactory factory;
 
-        public static NavigateToItemsSource Create(JoinableTaskContext joinableTaskContext, INavigateToItemProvider itemProvider)
-            => new NavigateToItemsSource(joinableTaskContext, itemProvider);
+        internal static NavigateToItemsSource Create(
+            SVsServiceProvider shellServiceProvider,
+            JoinableTaskContext joinableTaskContext,
+            INavigateToItemProviderFactory factory)
+            => new NavigateToItemsSource(shellServiceProvider, joinableTaskContext, factory);
 
-        private NavigateToItemsSource(JoinableTaskContext joinableTaskContext, INavigateToItemProvider itemProvider)
+
+        private NavigateToItemsSource(
+            SVsServiceProvider shellServiceProvider,
+            JoinableTaskContext joinableTaskContext,
+            INavigateToItemProviderFactory factory)
         {
+            this.shellServiceProvider = shellServiceProvider ?? throw new ArgumentNullException(nameof(shellServiceProvider));
             this.joinableTaskContext = joinableTaskContext ?? throw new ArgumentNullException(nameof(joinableTaskContext));
-            this.itemProvider = itemProvider ?? throw new ArgumentNullException(nameof(itemProvider));
+            this.factory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
-        public async Task GetItemsAsync(
+        public async System.Threading.Tasks.Task GetItemsAsync(
             string searchString,
             IOmniBoxSearchSession searchCallback)
         {
@@ -28,11 +37,14 @@
 
             var callbackShim = new NavigateToCallbackShim(searchCallback);
 
-            searchCallback.CancellationToken.Register(() => itemProvider.StopSearch());
+            // ItemsSources for NavigateTo are transient and have to be refreshed each search.
+            if (this.factory.TryCreateNavigateToItemProvider(this.shellServiceProvider, out var itemProvider))
+            {
+                searchCallback.CancellationToken.Register(() => itemProvider.StopSearch());
 
-            this.itemProvider.StartSearch(callbackShim, searchString);
-
-            await callbackShim.Task;
+                itemProvider.StartSearch(callbackShim, searchString);
+                await callbackShim.Task;
+            }
         }
     }
 }
