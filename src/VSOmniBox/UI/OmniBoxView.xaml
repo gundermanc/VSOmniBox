@@ -67,6 +67,7 @@
 
         <Style TargetType="{x:Type ListBox}">
             <Setter Property="Background" Value="{DynamicResource {x:Static uicolors:VSColors.SearchResultsListBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static uicolors:VSColors.SearchResultsListTextBrushKey}}" />
             <Setter Property="Focusable" Value="False" />
             <Setter Property="ItemTemplate" Value="{StaticResource SearchBoxDataTemplate}" />
             <Setter Property="Margin" Value="1" />
