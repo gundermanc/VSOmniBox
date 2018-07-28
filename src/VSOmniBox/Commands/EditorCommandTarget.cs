@@ -53,11 +53,12 @@
                         case (uint)VSConstants.VSStd2KCmdID.SELECTALL:
                         case (uint)VSConstants.VSStd2KCmdID.UP:
                             prgCmds[0].cmdf = (int)(OLECMDF.OLECMDF_SUPPORTED | OLECMDF.OLECMDF_ENABLED);
-
-                            // We handled this command, swallow it.
-                            return VSConstants.S_OK;
+                            break;
                     }
                 }
+
+                // We're visible, swallow all commands.
+                return VSConstants.S_OK;
             }
 
             return this.next.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
@@ -116,11 +117,12 @@
                             return VSConstants.S_OK;
                         case (uint)VSConstants.VSStd2KCmdID.UP:
                             this.RaiseKeyEvent(Key.Up);
-
-                            // We handled this command, swallow it.
                             return VSConstants.S_OK;
                     }
                 }
+
+                // We're visible, swallow all commands.
+                return VSConstants.S_OK;
             }
 
             return this.next.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
