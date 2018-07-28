@@ -23,6 +23,7 @@
             if (this.model.IsValidSelectionIndex(this.model.SelectedItemIndex) &&
                 (this.model.SelectedItemIndex > -1))
             {
+                this.model.IsVisible = false;
                 this.model.SearchResults[this.model.SelectedItemIndex].Invoke();
             }
         }
