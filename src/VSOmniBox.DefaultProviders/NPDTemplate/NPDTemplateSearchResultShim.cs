@@ -26,6 +26,8 @@
 
         public override string Description => template.Description;
 
+        public override int Priority => 1;
+
         public override void Invoke()
         {
             VSNEWPROJECTDLGINFO info = new VSNEWPROJECTDLGINFO();

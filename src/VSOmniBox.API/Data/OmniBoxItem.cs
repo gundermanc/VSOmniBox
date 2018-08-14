@@ -7,5 +7,7 @@
         public abstract string Description { get; }
 
         public abstract void Invoke();
+
+        public virtual int Priority { get; } = 0;
     }
 }

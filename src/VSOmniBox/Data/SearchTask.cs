@@ -142,7 +142,8 @@
                 .SelectMany(select => select)
                 .Select(result => (item: result, titleMatch: patternMatcher.TryMatch(result.Title), descriptionMatch: patternMatcher.TryMatch(result.Description)))
                 .Where(patternMatch => patternMatch.titleMatch != null || patternMatch.descriptionMatch != null)
-                .OrderBy(result => result.titleMatch)
+                .OrderByDescending(result => result.item.Priority)
+                .ThenBy(result => result.titleMatch)
                 .ThenBy(result => result.descriptionMatch)
                 .Select(result => result.item);
 
