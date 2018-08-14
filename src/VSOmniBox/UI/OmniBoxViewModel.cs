@@ -194,6 +194,7 @@
         public void UpdateFromSearchDataModel(SearchDataModel searchDataModel)
         {
             const int MaxResultsPerPivot = 3;
+            const int MaxInitialResultsPerPivot = 5;
 
             this.searchDataModel = searchDataModel;
 
@@ -221,33 +222,44 @@
                 return;
             }
 
+            var initialResults = this.SearchString.Length == 0;
+            var maxResults = initialResults ? MaxInitialResultsPerPivot : MaxResultsPerPivot;
             var resultsListBuilder = ImmutableArray.CreateBuilder<OmniBoxItem>();
 
             if (this.Pivot.HasFlag(OmniBoxPivot.Code) && searchDataModel.CodeItems.Length > 0)
             {
-                resultsListBuilder.Add(
-                    new OmniBoxPivotItem(
-                        Strings.CodePivotItemTitle,
-                        description: string.Empty));
-                resultsListBuilder.AddRange(searchDataModel.CodeItems.Take(MaxResultsPerPivot));
+                if (!initialResults)
+                {
+                    resultsListBuilder.Add(
+                        new OmniBoxPivotItem(
+                            Strings.CodePivotItemTitle,
+                            description: string.Empty));
+                }
+                resultsListBuilder.AddRange(searchDataModel.CodeItems.Take(maxResults));
             }
 
             if (this.Pivot.HasFlag(OmniBoxPivot.IDE) && searchDataModel.IDEItems.Length > 0)
             {
-                resultsListBuilder.Add(
-                    new OmniBoxPivotItem(
-                        Strings.IDEPivotItemTitle,
-                        description: string.Empty));
-                resultsListBuilder.AddRange(searchDataModel.IDEItems.Take(MaxResultsPerPivot));
+                if (!initialResults)
+                {
+                    resultsListBuilder.Add(
+                        new OmniBoxPivotItem(
+                            Strings.IDEPivotItemTitle,
+                            description: string.Empty));
+                }
+                resultsListBuilder.AddRange(searchDataModel.IDEItems.Take(maxResults));
             }
 
             if (this.Pivot.HasFlag(OmniBoxPivot.Help) && searchDataModel.HelpItems.Length > 0)
             {
-                resultsListBuilder.Add(
-                    new OmniBoxPivotItem(
-                        Strings.HelpPivotItemTitle,
-                        description: string.Empty));
-                resultsListBuilder.AddRange(searchDataModel.HelpItems.Take(MaxResultsPerPivot));
+                if (!initialResults)
+                {
+                    resultsListBuilder.Add(
+                        new OmniBoxPivotItem(
+                            Strings.HelpPivotItemTitle,
+                            description: string.Empty));
+                }
+                resultsListBuilder.AddRange(searchDataModel.HelpItems.Take(maxResults));
             }
 
 
