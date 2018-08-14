@@ -166,6 +166,13 @@
         {
             searchSession.AddItem(new ContextualCommandItem(
                 this.dte,
+                "New Project",
+                "Start typing to search projects or click here to start NPD",
+                "View.ErrorList",
+                KnownMonikers.Solution));
+
+            searchSession.AddItem(new ContextualCommandItem(
+                this.dte,
                 "Error List",
                 "View errors for the current projects and solution",
                 "View.ErrorList",
