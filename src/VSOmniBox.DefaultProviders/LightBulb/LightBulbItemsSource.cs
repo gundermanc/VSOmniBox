@@ -42,7 +42,10 @@
                 this.textManager = (IVsTextManager2)this.serviceProvider.GetService(typeof(SVsTextManager));
             }
 
-            ErrorHandler.ThrowOnFailure(this.textManager.GetActiveView2(fMustHaveFocus: 1, pBuffer: null, grfIncludeViewFrameType: 0, out var ppView));
+            if (!ErrorHandler.Succeeded(this.textManager.GetActiveView2(fMustHaveFocus: 1, pBuffer: null, grfIncludeViewFrameType: 0, out var ppView)))
+            {
+                return;
+            }
 
             var textView = this.adaptersFactory.GetWpfTextView(ppView);
             if (textView != null)

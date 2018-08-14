@@ -2,6 +2,8 @@
 {
     using System;
     using System.Threading;
+    using Microsoft.VisualStudio.Imaging;
+    using Microsoft.VisualStudio.Imaging.Interop;
     using Microsoft.VisualStudio.Language.Intellisense;
     using VSOmniBox.API.Data;
 
@@ -17,6 +19,8 @@
         public override string Title => this.lightBulbAction.DisplayText;
 
         public override string Description => "Performs a lightbulb action on the current document...";
+
+        public override ImageMoniker Icon => KnownMonikers.IntellisenseLightBulb;
 
         public override void Invoke() => this.lightBulbAction.Invoke(CancellationToken.None);
 

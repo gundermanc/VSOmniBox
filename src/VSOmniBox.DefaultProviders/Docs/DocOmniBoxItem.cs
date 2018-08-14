@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
 using VSOmniBox.API.Data;
 
 namespace VSOmniBox.DefaultProviders.Docs
@@ -16,6 +18,8 @@ namespace VSOmniBox.DefaultProviders.Docs
         public override string Title { get; }
 
         public override string Description { get; }
+
+        public override ImageMoniker Icon => KnownMonikers.MSDN;
 
         public override void Invoke()
         {

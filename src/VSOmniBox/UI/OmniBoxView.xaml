@@ -22,9 +22,17 @@
 
         <!-- Search box item template styles our results list. -->
         <DataTemplate x:Key="SearchBoxDataTemplate">
-            <StackPanel>
-                <TextBlock x:Name="TitleBlock" FontSize="14" Text="{Binding Path=Title}" Margin="20,0,0,0" />
-                <TextBlock x:Name="DescriptionBlock" FontSize="12" Text="{Binding Path=Description}" FontStyle="Italic" Margin="25,0,0,0" ToolTip="{Binding Path=Description}"/>
+            <StackPanel Orientation="Horizontal">
+                <imaging:CrispImage x:Name="Icon"
+                                    Width="32"
+                                    Height="32"
+                                    Moniker="{Binding Path=Icon}"
+                                    Margin="2,0,2,0"
+                                    theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource AncestorType=ListBox}, Converter={StaticResource BrushToColorConverter}}" />
+                <StackPanel>
+                    <TextBlock x:Name="TitleBlock" FontSize="14" Text="{Binding Path=Title}" Margin="20,0,0,0" />
+                    <TextBlock x:Name="DescriptionBlock" FontSize="12" Text="{Binding Path=Description}" FontStyle="Italic" Margin="25,0,0,0" ToolTip="{Binding Path=Description}"/>
+                </StackPanel>
             </StackPanel>
 
             <DataTemplate.Triggers>
@@ -42,6 +50,7 @@
                 <!-- Pivot items are special emphasized results that are used to group items. -->
                 <DataTrigger Binding="{Binding IsPivot}" Value="True">
                     <Setter TargetName="TitleBlock" Property="Margin" Value="0" />
+                    <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
                     <Setter TargetName="DescriptionBlock" Property="Visibility" Value="Collapsed" />
                     <Setter Property="TextBlock.FontSize" Value="16" />
                     <Setter Property="TextBlock.FontWeight" Value="Bold" />

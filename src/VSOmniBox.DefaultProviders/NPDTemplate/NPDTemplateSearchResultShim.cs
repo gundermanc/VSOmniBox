@@ -4,6 +4,8 @@
     using System.Diagnostics;
     using Microsoft.Internal.VisualStudio.Shell;
     using Microsoft.Internal.VisualStudio.Shell.Interop;
+    using Microsoft.VisualStudio.Imaging;
+    using Microsoft.VisualStudio.Imaging.Interop;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.TemplateProviders;
     using VSOmniBox.API.Data;
@@ -25,6 +27,8 @@
         public override string Title => "Create Project -> " + template.DefaultName;
 
         public override string Description => template.Description;
+
+        public override ImageMoniker Icon => KnownMonikers.Solution;
 
         public override int Priority => 1;
 
