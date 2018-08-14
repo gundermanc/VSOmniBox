@@ -168,7 +168,7 @@
                 this.dte,
                 "New Project",
                 "Start typing to search projects or click here to start NPD",
-                "View.ErrorList",
+                "File.NewProject",
                 KnownMonikers.Solution));
 
             searchSession.AddItem(new ContextualCommandItem(
