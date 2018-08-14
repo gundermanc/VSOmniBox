@@ -130,22 +130,33 @@
             IEnumerable<IEnumerable<OmniBoxItem>> providerResultsLists,
             string searchString)
         {
-            // Create pattern matcher for ranking and sorting items.
-            var patternMatcherOptions = new PatternMatcherCreationOptions(
-                CultureInfo.CurrentCulture,
-                PatternMatcherCreationFlags.AllowFuzzyMatching | PatternMatcherCreationFlags.AllowSimpleSubstringMatching);
-            var patternMatcher = patternMatcherFactory.CreatePatternMatcher(
-                searchString,
-                patternMatcherOptions);
+            IEnumerable<OmniBoxItem> filteredAndSortedResults;
+            if (searchString.Length > 0)
+            {
+                // Create pattern matcher for ranking and sorting items.
+                var patternMatcherOptions = new PatternMatcherCreationOptions(
+                    CultureInfo.CurrentCulture,
+                    PatternMatcherCreationFlags.AllowFuzzyMatching | PatternMatcherCreationFlags.AllowSimpleSubstringMatching);
+                var patternMatcher = patternMatcherFactory.CreatePatternMatcher(
+                    searchString,
+                    patternMatcherOptions);
 
-            var filteredAndSortedResults = providerResultsLists
-                .SelectMany(select => select)
-                .Select(result => (item: result, titleMatch: patternMatcher.TryMatch(result.Title), descriptionMatch: patternMatcher.TryMatch(result.Description)))
-                .Where(patternMatch => patternMatch.titleMatch != null || patternMatch.descriptionMatch != null)
-                .OrderByDescending(result => result.item.Priority)
-                .ThenBy(result => result.titleMatch)
-                .ThenBy(result => result.descriptionMatch)
-                .Select(result => result.item);
+                filteredAndSortedResults = providerResultsLists
+                    .SelectMany(select => select)
+                    .Select(result => (item: result, titleMatch: patternMatcher.TryMatch(result.Title), descriptionMatch: patternMatcher.TryMatch(result.Description)))
+                    .Where(patternMatch => patternMatch.titleMatch != null || patternMatch.descriptionMatch != null)
+                    .OrderByDescending(result => result.item.Priority)
+                    .ThenBy(result => result.titleMatch)
+                    .ThenBy(result => result.descriptionMatch)
+                    .Select(result => result.item);
+            }
+            else
+            {
+                // Pre-populating results, bypass pattern matcher.
+                filteredAndSortedResults = providerResultsLists
+                    .SelectMany(select => select)
+                    .OrderByDescending(result => result.Priority);
+            }
 
             var builder = ImmutableArray.CreateBuilder<OmniBoxItem>();
             builder.AddRange(filteredAndSortedResults);

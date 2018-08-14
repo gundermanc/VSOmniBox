@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Data\OmniBoxPivot.cs" />
     <Compile Include="Data\OmniBoxPivotAttribute.cs" />
+    <Compile Include="Data\OmniBoxInitialResultsAttribute.cs" />
     <Compile Include="UI\IOmniBoxUIService.cs" />
     <Compile Include="Data\OmniBoxItem.cs" />
     <Compile Include="Data\IOmniBoxSearchSession.cs" />

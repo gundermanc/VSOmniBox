@@ -5,6 +5,7 @@
     using System.ComponentModel.Composition;
     using System.Diagnostics;
     using System.Windows;
+    using VSOmniBox.API.Data;
     using VSOmniBox.API.UI;
     using VSOmniBox.Data;
 
@@ -40,6 +41,12 @@
                     {
                         this.searchController.WarmupFireAndForget();
                         this.CreateView();
+
+                        // Populate with initial results.
+                        this.searchController.StartOrUpdateSearch(
+                            searchString: string.Empty,
+                            pivot: OmniBoxPivot.Code | OmniBoxPivot.IDE | OmniBoxPivot.Help,
+                            initialOnly: true);
 
                         this.view.Visibility = Visibility.Visible;
                         this.view.Activate();

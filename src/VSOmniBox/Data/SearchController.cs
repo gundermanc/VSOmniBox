@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.ComponentModel.Composition;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.Text.PatternMatching;
     using Microsoft.VisualStudio.Threading;
@@ -15,7 +16,7 @@
         private readonly IEnumerable<Lazy<IOmniBoxItemsSourceProvider, IOmniBoxItemsSourceProviderMetadata>> itemsSourceProviders;
         private readonly JoinableTaskContext joinableTaskContext;
         private readonly Lazy<IPatternMatcherFactory> patternMatcherFactory;
-        private AsyncLazy<ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)>> itemsSources;
+        private AsyncLazy<ImmutableArray<(IOmniBoxItemsSource source, IOmniBoxItemsSourceProviderMetadata metadata)>> itemsSources;
 
         // Should only be accessed from UI thread.
         private SearchTask currentSearch;
@@ -40,7 +41,7 @@
         public event EventHandler<SearchDataModelUpdatedArgs> DataModelUpdated;
 
         // Assumed to be called from only UI thread.
-        public void StartOrUpdateSearch(string searchString, OmniBoxPivot pivot)
+        public void StartOrUpdateSearch(string searchString, OmniBoxPivot pivot, bool initialOnly = false)
         {
             if (!this.joinableTaskContext.IsOnMainThread)
             {
@@ -49,8 +50,8 @@
 
             this.StopSearch();
 
-            // Search text is blank. Skip search and update with empty model.
-            if (searchString.Length == 0)
+            // Search text is blank. Skip search and update with empty model, unless we're pre-populating.
+            if (searchString.Length == 0 && !initialOnly)
             {
                 this.DataModelUpdated?.Invoke(
                     this,
@@ -62,8 +63,12 @@
 
             this.joinableTaskContext.Factory.RunAsync(async delegate
             {
-                var sources = await this.itemsSources.GetValueAsync();
-                await this.PerformSearch(this.currentSearch, sources, searchString, pivot);
+                IEnumerable<(IOmniBoxItemsSource source, IOmniBoxItemsSourceProviderMetadata metadata)> sources = await this.itemsSources.GetValueAsync();
+                if (initialOnly)
+                {
+                    sources = sources.Where(source => source.metadata.InitialResults);
+                }
+                await this.PerformSearch(this.currentSearch, sources, searchString, pivot, initialOnly);
             });
         }
 
@@ -94,9 +99,10 @@
 
         private async Task PerformSearch(
             SearchTask searchTask,
-            ImmutableArray<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)> sources,
+            IEnumerable<(IOmniBoxItemsSource, IOmniBoxItemsSourceProviderMetadata)> sources,
             string searchString,
-            OmniBoxPivot pivot)
+            OmniBoxPivot pivot,
+            bool initialOnly)
         {
             if (!this.joinableTaskContext.IsOnMainThread)
             {

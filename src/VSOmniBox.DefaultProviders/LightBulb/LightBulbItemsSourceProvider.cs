@@ -12,6 +12,7 @@
 
     [Export(typeof(IOmniBoxItemsSourceProvider))]
     [OmniBoxPivot(OmniBoxPivot.IDE)]
+    [OmniBoxInitialResults]
     internal sealed class LightBulbItemsSourceProvider : IOmniBoxItemsSourceProvider
     {
         private readonly JoinableTaskContext joinableTaskContext;
