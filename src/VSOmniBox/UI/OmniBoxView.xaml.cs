@@ -15,7 +15,7 @@
             this.InitializeComponent();
         }
 
-        private void OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             if (this.DataContext is IInvokable invokable &&
                 invokable.InvokeCommand.CanExecute(parameter: null))

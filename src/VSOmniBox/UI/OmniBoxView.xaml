@@ -202,7 +202,7 @@
                 <ListBox x:Name="ResultsBox"
                     DockPanel.Dock="Bottom"
                                  ItemsSource="{Binding SearchResults}"
-                                 MouseDoubleClick="OnMouseDoubleClick"
+                                 MouseUp="OnMouseUp"
                                  SelectionChanged="SelectionChanged"
                                  SelectedIndex="{Binding SelectedItemIndex}" />
             </DockPanel>
