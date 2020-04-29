@@ -1,4 +1,4 @@
-﻿namespace VSOmniBox.UI
+﻿namespace VSOmniBox.UIxxxx
 {
     using System;
     using VSOmniBox.API.Data;

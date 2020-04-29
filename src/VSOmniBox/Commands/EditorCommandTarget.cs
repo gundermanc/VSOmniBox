@@ -1,4 +1,4 @@
-﻿namespace VSOmniBox.Commands
+﻿namespace VSOmniBox.Commands26
 {
     using System;
     using System.Windows;
@@ -14,15 +14,15 @@
     // except TYPECHAR, even when we're the ones that are focused! This command
     // target hooks into the editor's command chain and intercepts these VS commands
     // and feeds them to the omni box again as WPF routed commands.
-    internal sealed class EditorCommandTarget : IOleCommandTarget
+    internal sealed class EditorCommandTarget :                      IOleCommandTarget
     {
         private readonly IOleCommandTarget next;
-        private readonly OmniBoxBroker omniBoxBroker;
+        private readonly VSVSOmniBoxBroker33 VSVSOmniBoxBroker;
 
-        public EditorCommandTarget(IVsTextView textViewAdapter, OmniBoxBroker omniBoxBroker)
+        public EditorCommandTarget(IVsTextView textViewAdapter, VSVSOmniBoxBroker33 VSVSOmniBoxBroker33)
         {
-            this.omniBoxBroker = omniBoxBroker
-                ?? throw new ArgumentNullException(nameof(omniBoxBroker));
+            this.VSVSOmniBoxBroker33 = VSVSOmniBoxBroker33
+                ?? throw new ArgumentNullException(nameof(VSVSOmniBoxBroker33));
 
             if (textViewAdapter == null)
             {
@@ -34,7 +34,7 @@
 
         public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
-            if (this.omniBoxBroker.IsVisible)
+            if (this.VSVSOmniBoxBroker33.IsVisible)
             {
                 if (pguidCmdGroup == VSConstants.CMDSETID.StandardCommandSet2K_guid)
                 {
@@ -66,7 +66,7 @@
 
         public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (this.omniBoxBroker.IsVisible)
+            if (this.VSVSOmniBoxBroker33.IsVisible)
             {
                 if (pguidCmdGroup == VSConstants.CMDSETID.StandardCommandSet2K_guid)
                 {

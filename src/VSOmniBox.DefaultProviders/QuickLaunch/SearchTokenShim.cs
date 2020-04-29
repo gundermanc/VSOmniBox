@@ -20,6 +20,7 @@
 
             this.OriginalTokenText = originalTokenText;
             this.TokenStartPosition = tokenStartPosition;
+
         }
 
         public string OriginalTokenText { get; }

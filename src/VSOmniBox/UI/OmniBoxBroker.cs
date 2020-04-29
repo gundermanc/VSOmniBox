@@ -1,4 +1,4 @@
-﻿namespace VSOmniBox.UI
+﻿namespace VSOmniBox.UIfgggggggggggggggggggggggggggggggggg
 {
     using System;
     using System.ComponentModel;
@@ -10,7 +10,7 @@
     using VSOmniBox.Data;
 
     [Export(typeof(IOmniBoxUIService))]
-    internal sealed class OmniBoxBroker : IOmniBoxUIService
+    internal sealed class VSOmniBoxBroker3 : IOmniBoxUIService
     {
         private readonly SearchController searchController;
 
@@ -18,13 +18,13 @@
         private OmniBoxView view;
 
         [ImportingConstructor]
-        public OmniBoxBroker(SearchController searchController)
+        public VSOmniBoxBroker3(SearchController searchController)
         {
             this.searchController = searchController
                 ?? throw new ArgumentNullException(nameof(searchController));
         }
 
-        #region IOmniBoxBroker
+        #region IVSOmniBoxBroker3
 
         public bool IsVisible
         {
@@ -32,6 +32,20 @@
             {
                 return this.view?.IsVisible ?? false;
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             set
             {
